@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, RefreshCw, Smartphone } from "lucide-react";
+import { Camera, RefreshCw, Smartphone, ArrowLeft, Zap, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { analyzeImage } from "@/lib/image-analysis";
 
@@ -23,7 +24,7 @@ export default function ScanPage() {
 
     const startCamera = async () => {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            setError("안전하지 않은 연결(HTTP)에서는 카메라를 사용할 수 없습니다. 'chrome://flags' 설정이 필요하거나 HTTPS 연결이 필요합니다.");
+            setError("안전하지 않은 연결(HTTP)에서는 카메라를 사용할 수 없습니다.");
             return;
         }
 
@@ -74,184 +75,201 @@ export default function ScanPage() {
     };
 
     const analyze = () => {
-        if (!canvasRef.current || !capturedImage) {
-            console.error("Missing canvas or image");
-            return;
-        }
+        if (!canvasRef.current || !capturedImage) return;
 
         setLoading(true);
 
         try {
             const canvas = canvasRef.current;
             const context = canvas.getContext("2d");
+            if (!context) throw new Error("Could not get canvas context");
 
-            if (!context) {
-                throw new Error("Could not get canvas context");
-            }
-
-            // Perform analysis synchronously (it's fast)
             const { seed } = analyzeImage(context, canvas.width, canvas.height);
 
-            // Short delay only for visual effect
             setTimeout(() => {
                 router.push(`/result?seed=${seed}`);
-            }, 1000);
+            }, 2000);
 
         } catch (err) {
             console.error("Analysis failed:", err);
-            setError("이미지 분석 중 오류가 발생했습니다. 다시 시도해주세요.");
+            setError("데이터 해석 중 오류가 발생했습니다.");
             setLoading(false);
         }
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-purple-500 mb-4"></div>
-                <p className="text-xl font-light animate-pulse">전생의 기록을 탐색 중입니다...</p>
+            <div className="min-h-screen bg-[#030303] flex flex-col items-center justify-center text-white p-6">
+                <div className="relative w-32 h-32 mb-8">
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-0 border-t-2 border-purple-500 rounded-full"
+                    />
+                    <div className="absolute inset-4 border-b-2 border-indigo-500 rounded-full animate-reverse-spin" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <Zap className="w-8 h-8 text-purple-400 animate-pulse" />
+                    </div>
+                </div>
+                <h2 className="text-2xl font-black tracking-tight mb-2">시간의 균열 탐색 중</h2>
+                <p className="text-white/40 text-sm font-mono animate-pulse">EXTRACTING TEMPORAL DATA...</p>
             </div>
         )
     }
 
     return (
-        <main className="min-h-screen bg-black text-white relative flex flex-col">
-            {/* Header */}
-            <div className="absolute top-0 left-0 right-0 p-4 z-20 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
-                <Link href="/" className="text-white/80 hover:text-white">
-                    ← 뒤로가기
+        <main className="min-h-screen bg-[#030303] text-white relative flex flex-col font-sans overflow-hidden">
+            {/* Header / HUD */}
+            <div className="absolute top-0 left-0 right-0 p-6 z-30 flex justify-between items-center pointer-events-none">
+                <Link href="/" className="pointer-events-auto bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-all">
+                    <ArrowLeft className="w-5 h-5 text-white/70" />
                 </Link>
-                <span className="font-semibold text-purple-200">얼굴 인식</span>
-                <div className="w-16"></div> {/* Spacer */}
+                <div className="flex flex-col items-center">
+                    <h1 className="text-lg font-black tracking-widest text-purple-200">TEMPORAL SCAN</h1>
+                    <div className="text-[9px] font-mono text-white/30 tracking-[0.3em]">SECURE_LINK // ID_EXTRACTOR</div>
+                </div>
+                <div className="w-11"></div>
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-center relative bg-gray-900 overflow-hidden">
-                {error && !capturedImage ? (
-                    <div className="p-6 text-center max-w-xs transition-all animate-in fade-in zoom-in">
-                        <Smartphone className="w-12 h-12 mx-auto mb-4 text-gray-500" />
-                        <p className="text-red-400 mb-4">{error}</p>
-                        <button
-                            onClick={() => startCamera()}
-                            className="px-6 py-2 bg-purple-600/20 border border-purple-500/50 rounded-lg text-purple-200 hover:bg-purple-600/40 transition-colors"
+            {/* Scanning Area */}
+            <div className="flex-1 relative flex flex-col items-center justify-center bg-black overflow-hidden border-y border-white/10">
+                <AnimatePresence mode="wait">
+                    {error && !capturedImage ? (
+                        <motion.div
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                            className="p-8 text-center max-w-xs z-10"
                         >
-                            카메라 다시 시도
-                        </button>
-                    </div>
-                ) : (
-                    <>
-                        {capturedImage ? (
-                            <img
-                                src={capturedImage}
-                                alt="Captured"
-                                className="w-full h-full object-cover animate-in fade-in duration-500"
-                            />
-                        ) : (
-                            <div className="relative w-full h-full">
-                                <video
-                                    ref={videoRef}
-                                    autoPlay
-                                    playsInline
-                                    muted
-                                    className="w-full h-full object-cover transform scale-x-[-1]" // Mirror effect
+                            <ShieldCheck className="w-12 h-12 mx-auto mb-4 text-white/20" />
+                            <p className="text-red-400 font-bold mb-6 word-keep-all">{error}</p>
+                            <button
+                                onClick={() => startCamera()}
+                                className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-bold hover:bg-white/10 transition-colors"
+                            >
+                                시스템 리부팅
+                            </button>
+                        </motion.div>
+                    ) : (
+                        <div className="relative w-full h-full flex flex-col items-center justify-center">
+                            {capturedImage ? (
+                                <motion.img
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    src={capturedImage}
+                                    alt="Captured"
+                                    className="w-full h-full object-cover"
                                 />
+                            ) : (
+                                <div className="absolute inset-0">
+                                    <video
+                                        ref={videoRef}
+                                        autoPlay playsInline muted
+                                        className="w-full h-full object-cover transform scale-x-[-1]"
+                                    />
 
-                                {/* Face Overlay Guide */}
-                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                                    <div className="w-64 h-80 border-2 border-white/30 rounded-[50%] box-border shadow-[0_0_0_9999px_rgba(0,0,0,0.5)] relative">
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/70 text-sm font-medium bg-black/50 px-3 py-1 rounded-full">
-                                            얼굴을 맞춰주세요
-                                        </div>
-                                        {/* Corner accents */}
-                                        <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-purple-500 rounded-tl-3xl"></div>
-                                        <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-purple-500 rounded-tr-3xl"></div>
-                                        <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-purple-500 rounded-bl-3xl"></div>
-                                        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-purple-500 rounded-br-3xl"></div>
-                                    </div>
+                                    {/* Scanning VFX */}
+                                    <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 via-transparent to-purple-500/10" />
+                                    <motion.div
+                                        animate={{ top: ['0%', '100%', '0%'] }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                        className="absolute left-0 w-full h-[2px] bg-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.5)] z-20"
+                                    />
+
+                                    {/* Grid Overlay */}
+                                    <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
                                 </div>
+                            )}
+
+                            {/* HUD Corners */}
+                            <div className="absolute inset-8 border border-white/10 pointer-events-none">
+                                <div className="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-purple-500" />
+                                <div className="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-purple-500" />
+                                <div className="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-purple-500" />
+                                <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-purple-500" />
                             </div>
-                        )}
-                    </>
-                )}
-                {/* Always render canvas so ref is always available */}
+                        </div>
+                    )}
+                </AnimatePresence>
+
                 <canvas ref={canvasRef} className="hidden" />
             </div>
 
             {/* Controls */}
-            <div className="bg-black/80 p-8 pb-12 backdrop-blur-md">
-                <div className="flex items-center justify-center gap-8">
+            <div className="bg-[#030303] p-8 pb-16 relative">
+                <div className="max-w-md mx-auto flex items-center justify-between gap-6">
                     {capturedImage ? (
-                        <>
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                            className="flex w-full items-center gap-4"
+                        >
                             <button
                                 onClick={retake}
-                                className="flex flex-col items-center gap-2 text-white/70 hover:text-white transition-colors"
+                                className="flex flex-col items-center gap-2 text-white/40 hover:text-white transition-colors group"
                             >
-                                <div className="p-3 bg-gray-800 rounded-full">
+                                <div className="p-4 bg-white/5 rounded-2xl border border-white/10 group-hover:border-white/20">
                                     <RefreshCw className="w-6 h-6" />
                                 </div>
-                                <span className="text-sm">재촬영</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest">RESET</span>
                             </button>
 
                             <button
                                 onClick={analyze}
-                                className="flex-1 max-w-[200px] py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-lg shadow-lg shadow-purple-500/30 active:scale-95 transition-all"
+                                className="flex-1 py-5 bg-white text-black rounded-2xl font-black text-xl shadow-[0_20px_40px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
                             >
-                                분석하기
+                                분석 개시
                             </button>
-                        </>
+                        </motion.div>
                     ) : (
-                        <>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                id="file-upload"
-                                onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        setError(""); // Clear any camera error when uploading
-                                        const reader = new FileReader();
-                                        reader.onload = (event) => {
-                                            const dataUrl = event.target?.result as string;
-                                            setCapturedImage(dataUrl);
-
-                                            // Ensure canvas captures the uploaded image
-                                            const img = new Image();
-                                            img.onload = () => {
-                                                if (canvasRef.current) {
-                                                    const canvas = canvasRef.current;
-                                                    const ctx = canvas.getContext("2d");
-                                                    if (ctx) {
-                                                        canvas.width = img.width;
-                                                        canvas.height = img.height;
-                                                        ctx.drawImage(img, 0, 0);
+                        <div className="flex w-full items-center justify-between gap-4">
+                            {/* Combined Upload Label */}
+                            <div className="flex flex-col items-center gap-2 group cursor-pointer relative">
+                                <input
+                                    type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" id="file-upload"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            setError("");
+                                            const reader = new FileReader();
+                                            reader.onload = (event) => {
+                                                const dataUrl = event.target?.result as string;
+                                                setCapturedImage(dataUrl);
+                                                const img = new Image();
+                                                img.onload = () => {
+                                                    if (canvasRef.current) {
+                                                        const canvas = canvasRef.current;
+                                                        const ctx = canvas.getContext("2d");
+                                                        if (ctx) {
+                                                            canvas.width = img.width; canvas.height = img.height;
+                                                            ctx.drawImage(img, 0, 0);
+                                                        }
                                                     }
-                                                }
+                                                };
+                                                img.src = dataUrl;
                                             };
-                                            img.src = dataUrl;
-                                        };
-                                        reader.readAsDataURL(file);
-                                    }
-                                }}
-                            />
-                            <label
-                                htmlFor="file-upload"
-                                className="flex flex-col items-center gap-2 text-white/70 hover:text-white cursor-pointer transition-colors"
-                            >
-                                <div className="p-4 bg-gray-800 rounded-full">
-                                    <Smartphone className="w-6 h-6" />
+                                            reader.readAsDataURL(file);
+                                        }
+                                    }}
+                                />
+                                <div className="p-4 bg-white/5 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all">
+                                    <Smartphone className="w-7 h-7 text-white/70 group-hover:text-white transition-colors" />
                                 </div>
-                                <span className="text-sm">사진 업로드</span>
-                            </label>
+                                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">사진 업로드</span>
+                            </div>
 
-                            <button
-                                onClick={captureImage}
-                                disabled={!!error && !navigator.mediaDevices?.getUserMedia}
-                                className="w-20 h-20 rounded-full border-4 border-white/30 bg-white/10 flex items-center justify-center active:scale-90 transition-transform disabled:opacity-50 disabled:cursor-not-allowed group"
-                            >
-                                <div className="w-16 h-16 rounded-full bg-white group-active:scale-90 transition-transform"></div>
-                            </button>
+                            {/* Shutter Button */}
+                            <div className="flex flex-col items-center gap-3">
+                                <button
+                                    onClick={captureImage}
+                                    disabled={!!error && !navigator.mediaDevices?.getUserMedia}
+                                    className="w-20 h-20 rounded-full border-4 border-white/20 p-1 bg-white/5 active:scale-90 transition-all disabled:opacity-20 flex items-center justify-center group"
+                                >
+                                    <div className="w-full h-full rounded-full bg-white group-hover:scale-95 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]"></div>
+                                </button>
+                                <span className="text-[11px] font-black text-white uppercase tracking-widest">카메라</span>
+                            </div>
 
-                            <div className="w-16"></div> {/* balance spacer */}
-                        </>
+                            {/* Balanced Spacer */}
+                            <div className="w-16"></div>
+                        </div>
                     )}
                 </div>
             </div>
