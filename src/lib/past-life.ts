@@ -167,9 +167,7 @@ const generateStory = (base: PastLifeResult, stats: Stats, seed: number): string
 
     const paragraphs = [
         STORY_INTRO[introIndex],
-        STORY_LIFE[lifeIndex],
-        STORY_ADVICE[adviceIndex],
-        STORY_REASON[introIndex % STORY_REASON.length] // Combine reason
+        STORY_LIFE[lifeIndex]
     ];
 
     return paragraphs.map(p => replaceVars(p)).join("\n\n");

@@ -195,10 +195,28 @@ function ResultContent() {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="w-full space-y-6"
+                    transition={{ delay: 0.1 }}
+                    className="w-full space-y-8"
                 >
-                    {/* Story Section */}
+                    {/* Timeline Information */}
+                    <div className="bg-white/5 backdrop-blur-sm p-4 rounded-3xl border border-white/10">
+                        <Timeline
+                            birth={result.birthYear}
+                            death={result.deathYear}
+                            era={result.era.name}
+                        />
+                    </div>
+
+                    {/* Stats Visualization (능력치 이미지) */}
+                    <div className="bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10">
+                        <h3 className="text-white/40 font-black mb-2 flex items-center justify-center gap-2 text-xs uppercase tracking-widest text-center">
+                            <Zap className="w-3 h-3 text-yellow-400" />
+                            전생 능력치 데이터
+                        </h3>
+                        <RadarChart stats={result.stats} isHuman={isHuman} />
+                    </div>
+
+                    {/* Story Section (Shortened) */}
                     <div className="text-left bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10">
                         <h3 className="text-white/40 font-black mb-4 flex items-center gap-2 text-xs uppercase tracking-widest">
                             <Sparkles className="w-3 h-3 text-purple-400" />
@@ -221,16 +239,11 @@ function ResultContent() {
                             "{result.reincarnationReason}"
                         </p>
                     </div>
-                </motion.div>
 
-                {/* Result Card Generation - Now Primary Visual */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className="w-full"
-                >
-                    {result && <ResultCard result={result} />}
+                    {/* Result Card Generation - Primary Shareable Visual */}
+                    <div className="w-full">
+                        {result && <ResultCard result={result} />}
+                    </div>
                 </motion.div>
 
                 <motion.div
