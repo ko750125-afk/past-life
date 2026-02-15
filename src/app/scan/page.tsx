@@ -250,20 +250,20 @@ export default function ScanPage() {
                                 </div>
                             )}
 
-                            {/* Analyze Hint - Fixed Bottom Overlay */}
+                            {/* Analyze Hint - Fixed Bottom Overlay (Viewport Relative) */}
                             {capturedImage && (
-                                <div className="absolute inset-x-0 bottom-12 z-50 flex justify-center pointer-events-none">
+                                <div className="fixed bottom-10 left-0 right-0 z-[100] flex justify-center pointer-events-none">
                                     <motion.div
                                         initial={{ y: 50, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
-                                        className="flex flex-row items-center gap-5 bg-black/80 backdrop-blur-xl px-8 py-5 rounded-full border border-yellow-500/50 shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
+                                        className="flex flex-row items-center gap-5 bg-black/80 backdrop-blur-xl px-12 py-5 rounded-full border border-yellow-500/50 shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
                                     >
                                         <motion.div
                                             animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
                                             transition={{ duration: 1.5, repeat: Infinity }}
                                             className="bg-yellow-400/20 p-2 rounded-full"
                                         >
-                                            <Smartphone className="w-8 h-8 text-yellow-400 fill-yellow-400" />
+                                            <Smartphone className="w-10 h-10 text-yellow-400 fill-yellow-400" />
                                         </motion.div>
                                         <div className="text-yellow-400 font-bold text-xl leading-tight text-left">
                                             화면을 터치하면<br />
