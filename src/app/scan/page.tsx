@@ -188,7 +188,7 @@ export default function ScanPage() {
                     <ArrowLeft className="w-5 h-5 text-white" />
                 </Link>
                 <div className="flex flex-col items-center">
-                    <h1 className="text-xl font-black tracking-widest text-white">TEMPORAL SCAN</h1>
+                    <h1 className="text-xl font-black tracking-widest text-white">전생 데이터 스캔</h1>
                 </div>
                 <div className="w-11"></div>
             </div>

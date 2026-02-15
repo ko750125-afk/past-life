@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "Past Life Analyzer | 시간을 거슬러 당신을 만나세요",
+  title: "나의 전생 찾기 | 과거로의 신비로운 여행",
   description: "AI 얼굴 분석 기술로 당신의 잊혀진 전생을 밝혀내는 신비로운 경험을 시작해보세요.",
 };
 

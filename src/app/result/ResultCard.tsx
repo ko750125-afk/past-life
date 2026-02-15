@@ -50,11 +50,26 @@ export default function ResultCard({ result }: ResultCardProps) {
             ctx.fill();
         }
 
-        // 3. Draw Silhouette (Generic shape based on type)
+        // 3. Draw Silhouette Aura (Enhanced visibility)
         ctx.save();
-        ctx.fillStyle = "rgba(0, 0, 0, 0.03)";
+        const centerX = WIDTH / 2;
+        const centerY = HEIGHT / 2 - 120;
+
+        // Outer Glow
+        const aura = ctx.createRadialGradient(centerX, centerY, 50, centerX, centerY, 220);
+        aura.addColorStop(0, "rgba(255, 255, 255, 0.8)");
+        aura.addColorStop(0.5, `hsla(${hue}, 100%, 90%, 0.5)`);
+        aura.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+        ctx.fillStyle = aura;
         ctx.beginPath();
-        ctx.arc(WIDTH / 2, HEIGHT / 2 - 120, 200, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, 220, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner solid-ish circle for contrast
+        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 160, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 

@@ -247,27 +247,27 @@ function ResultContent() {
                     </Link>
                     <button
                         onClick={() => {
-                            const seed = searchParams.get("seed");
-                            const shareUrl = `${window.location.protocol}//${window.location.host}/result?seed=${seed}`;
+                            // Copying Home Page URL as requested
+                            const shareUrl = `${window.location.protocol}//${window.location.host}/`;
 
                             if (navigator.share) {
                                 navigator.share({
                                     title: '나의 전생 찾기',
-                                    text: `나의 전생은 ${result.entityName}였습니다! 당신의 전생도 확인해보세요.`,
+                                    text: `나는 전생에 '${result.entityName}'였습니다! 당신의 진짜 전생은 무엇일까요? 지금 바로 확인해보세요!`,
                                     url: shareUrl,
                                 }).catch(() => {
                                     navigator.clipboard.writeText(shareUrl);
-                                    alert('나의 전생 찾기 결과 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
+                                    alert('나의 전생 찾기 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                                 });
                             } else {
                                 navigator.clipboard.writeText(shareUrl);
-                                alert('나의 전생 찾기 결과 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
+                                alert('나의 전생 찾기 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                             }
                         }}
                         className="flex-[2] py-5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-black text-white flex items-center justify-center gap-2 shadow-2xl shadow-purple-500/30 hover:scale-[1.02] active:scale-95 transition-all text-xl"
                     >
                         <Share2 className="w-6 h-6" />
-                        공유하기
+                        결과 공유하기
                     </button>
                 </motion.div>
             </motion.div>
