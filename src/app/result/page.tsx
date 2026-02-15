@@ -247,17 +247,20 @@ function ResultContent() {
                     </Link>
                     <button
                         onClick={() => {
+                            const seed = searchParams.get("seed");
+                            const shareUrl = `${window.location.protocol}//${window.location.host}/result?seed=${seed}`;
+
                             if (navigator.share) {
                                 navigator.share({
                                     title: '나의 전생 찾기',
-                                    text: `나의 전생은 ${result.nickname} ${result.entityName}였습니다! 당신의 전생도 확인해보세요.`,
-                                    url: window.location.href,
+                                    text: `나의 전생은 ${result.entityName}였습니다! 당신의 전생도 확인해보세요.`,
+                                    url: shareUrl,
                                 }).catch(() => {
-                                    navigator.clipboard.writeText(window.location.href);
+                                    navigator.clipboard.writeText(shareUrl);
                                     alert('나의 전생 찾기 결과 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                                 });
                             } else {
-                                navigator.clipboard.writeText(window.location.href);
+                                navigator.clipboard.writeText(shareUrl);
                                 alert('나의 전생 찾기 결과 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                             }
                         }}

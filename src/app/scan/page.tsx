@@ -63,6 +63,13 @@ export default function ScanPage() {
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const dataUrl = canvas.toDataURL("image/png");
                 setCapturedImage(dataUrl);
+
+                // Auto-analyze after 3 seconds if user doesn't tap
+                setTimeout(() => {
+                    if (videoRef.current && canvasRef.current && !loading) {
+                        // We will allow the user to see the button first
+                    }
+                }, 3000);
             }
         }
     };
@@ -248,8 +255,6 @@ export default function ScanPage() {
                                     />
                                 </div>
                             )}
-
-                            {/* HUD Static Corners Removed as per request */}
                         </div>
                     )}
                 </AnimatePresence>
@@ -257,27 +262,44 @@ export default function ScanPage() {
                 <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            {/* Controls - Moved up and made much larger */}
-            <div className="bg-[#030303] px-6 relative z-40">
-                <div className="max-w-2xl mx-auto">
-                    {capturedImage ? (
+            {/* Analysis Overlay - Appears after capture */}
+            <AnimatePresence>
+                {capturedImage && !loading && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+                    >
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-                            className="fixed bottom-32 left-6 right-6 z-50 flex flex-col items-center"
+                            initial={{ scale: 0.8, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            className="w-full max-w-sm flex flex-col gap-6"
                         >
+                            <div className="text-center space-y-2 mb-4">
+                                <h3 className="text-2xl font-black text-white italic">분석 준비 완료!</h3>
+                                <p className="text-white/60 text-sm">전생의 기록을 확인하시겠습니까?</p>
+                            </div>
+
                             <button
                                 onClick={analyze}
-                                className="w-full py-28 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[6rem] font-black text-8xl shadow-[0_50px_150px_rgba(168,85,247,0.8)] hover:scale-[1.05] active:scale-90 transition-all flex items-center justify-center gap-12 group border-b-[20px] border-purple-800"
+                                className="w-full py-20 bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-[4rem] font-black text-6xl shadow-[0_0_80px_rgba(168,85,247,0.6)] hover:scale-105 active:scale-95 transition-all flex flex-col items-center justify-center gap-6 border-b-[10px] border-purple-900 group"
                             >
-                                <Zap className="w-24 h-24 fill-white group-hover:animate-bounce" />
-                                <span className="drop-shadow-lg">분석 시작</span>
+                                <Zap className="w-16 h-16 fill-white group-hover:animate-bounce" />
+                                <span>분석 시작</span>
+                            </button>
+
+                            <button
+                                onClick={retake}
+                                className="w-full py-6 bg-white/10 hover:bg-white/20 text-white/40 rounded-3xl font-bold text-xl transition-all flex items-center justify-center gap-2"
+                            >
+                                <RefreshCw className="w-5 h-5" />
+                                다시 촬영하기
                             </button>
                         </motion.div>
-                    ) : (
-                        <div className="h-20" /> /* Empty space where footer used to be */
-                    )}
-                </div>
-            </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </main>
     );
 }
