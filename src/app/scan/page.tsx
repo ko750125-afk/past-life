@@ -243,25 +243,35 @@ export default function ScanPage() {
 
                                 {/* Tap/Touch Hint - Overlay on top of everything */}
                                 <motion.div
-                                    animate={{ opacity: [0.8, 1, 0.8] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                    className="text-white text-3xl font-black uppercase tracking-[0.2em] text-center px-10 drop-shadow-[0_0_20px_rgba(0,0,0,0.8)] leading-tight absolute bottom-32 w-full z-50 pointer-events-none"
+                                    animate={{ opacity: [0.9, 1, 0.9] }}
+                                    className="absolute bottom-16 left-0 right-0 z-50 pointer-events-none flex justify-center items-center px-6"
                                 >
                                     {!capturedImage ? (
-                                        <>화면을 터치하여<br />전생 사진 촬영</>
+                                        <motion.div
+                                            animate={{ opacity: [0.6, 1, 0.6] }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                            className="text-white text-2xl font-black uppercase tracking-[0.2em] text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                                        >
+                                            <span className="bg-black/40 px-4 py-1 rounded-full backdrop-blur-sm">화면을 터치하여 촬영</span>
+                                        </motion.div>
                                     ) : (
-                                        <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
+                                        <motion.div
+                                            initial={{ y: 20, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            className="flex flex-row items-center gap-5 bg-black/70 backdrop-blur-md px-8 py-4 rounded-full border border-yellow-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                                        >
                                             <motion.div
                                                 animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
                                                 transition={{ duration: 1.5, repeat: Infinity }}
-                                                className="bg-white/20 p-4 rounded-full backdrop-blur-md border border-white/30 shadow-[0_0_30px_rgba(250,204,21,0.6)]"
+                                                className="bg-yellow-400/20 p-2 rounded-full"
                                             >
-                                                <Smartphone className="w-12 h-12 text-yellow-300 fill-yellow-400/20" />
+                                                <Smartphone className="w-8 h-8 text-yellow-400 fill-yellow-400" />
                                             </motion.div>
-                                            <div className="text-yellow-300 font-black text-3xl drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)] bg-black/60 px-8 py-4 rounded-3xl backdrop-blur-md border border-yellow-500/50 shadow-2xl">
-                                                화면을 터치하면<br />분석이 시작됩니다
+                                            <div className="text-yellow-400 font-bold text-xl leading-tight text-left">
+                                                화면을 터치하면<br />
+                                                <span className="text-white font-black text-2xl">분석이 시작됩니다</span>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     )}
                                 </motion.div>
                             </div>
