@@ -201,7 +201,6 @@ function ResultContent() {
                                 {result.nickname.split(' ')[0]}
                             </span>
                             <h2 className="text-4xl font-black text-white mb-2">{result.entityName}</h2>
-                            <div className="text-purple-200/60 font-medium text-sm">{result.era.name}</div>
                         </div>
 
                         {/* Timeline UI */}

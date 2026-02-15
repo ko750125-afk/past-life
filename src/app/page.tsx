@@ -71,7 +71,7 @@ export default function Home() {
         >
           <Link
             href="/scan"
-            className="w-full py-10 px-8 bg-white text-black hover:bg-purple-100 rounded-[2.5rem] font-black text-4xl md:text-5xl shadow-[0_20px_80px_rgba(255,255,255,0.3)] transition-all duration-300 flex flex-col items-center justify-center gap-4 active:scale-95 group relative overflow-hidden border-b-8 border-gray-300 active:border-b-0 active:translate-y-2"
+            className="w-full py-10 px-8 bg-yellow-400 text-black hover:bg-yellow-300 rounded-[2.5rem] font-black text-4xl md:text-5xl shadow-[0_20px_80px_rgba(250,204,21,0.3)] transition-all duration-300 flex flex-col items-center justify-center gap-4 active:scale-95 group relative overflow-hidden border-b-8 border-yellow-600 active:border-b-0 active:translate-y-2"
           >
             <Zap className="w-12 h-12 fill-black mb-2 animate-bounce" />
             타임머신 가동

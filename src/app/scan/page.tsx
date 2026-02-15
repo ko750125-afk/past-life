@@ -99,20 +99,49 @@ export default function ScanPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#030303] flex flex-col items-center justify-center text-white p-6">
-                <div className="relative w-32 h-32 mb-8">
+            <div className="min-h-screen bg-[#030303] flex flex-col items-center justify-center text-white p-6 overflow-hidden">
+                {/* Vortex / Blackhole Animation */}
+                <div className="relative w-64 h-64 mb-12 flex items-center justify-center">
+                    {[...Array(6)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            animate={{
+                                rotate: i % 2 === 0 ? 360 : -360,
+                                scale: [1, 1.1, 1],
+                                opacity: [0.3, 0.6, 0.3]
+                            }}
+                            transition={{
+                                duration: 3 + i,
+                                repeat: Infinity,
+                                ease: "linear"
+                            }}
+                            className="absolute border border-purple-500/30 rounded-full"
+                            style={{
+                                width: `${(i + 1) * 40}px`,
+                                height: `${(i + 1) * 40}px`,
+                                borderWidth: i === 0 ? '4px' : '1px',
+                                borderColor: i === 0 ? '#a855f7' : 'rgba(168, 85, 247, 0.2)'
+                            }}
+                        />
+                    ))}
                     <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                        className="absolute inset-0 border-t-2 border-purple-500 rounded-full"
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="w-8 h-8 bg-white rounded-full blur-md shadow-[0_0_50px_white]"
                     />
-                    <div className="absolute inset-4 border-b-2 border-indigo-500 rounded-full animate-reverse-spin" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <Zap className="w-8 h-8 text-purple-400 animate-pulse" />
-                    </div>
                 </div>
-                <h2 className="text-2xl font-black tracking-tight mb-2">시간의 균열 탐색 중</h2>
-                <p className="text-white/40 text-sm font-mono animate-pulse uppercase">Extracting Temporal Data...</p>
+
+                <h2 className="text-3xl font-black tracking-tight mb-4 animate-pulse">과거로 타임슬립 중</h2>
+                <div className="flex gap-2">
+                    {[0, 1, 2].map((i) => (
+                        <motion.div
+                            key={i}
+                            animate={{ y: [0, -10, 0] }}
+                            transition={{ delay: i * 0.2, repeat: Infinity }}
+                            className="w-2 h-2 bg-purple-500 rounded-full"
+                        />
+                    ))}
+                </div>
             </div>
         )
     }
@@ -165,14 +194,11 @@ export default function ScanPage() {
                                         className="w-full h-full object-cover transform scale-x-[-1]"
                                     />
 
-                                    {/* Face Guide Oval - Lifted slightly for better face framing */}
+                                    {/* Face Guide Oval */}
                                     <div className="absolute inset-x-0 top-0 bottom-[15%] flex items-center justify-center z-20 pointer-events-none">
-                                        <div className="w-[260px] h-[360px] border-4 border-dashed border-white/40 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.6)] relative">
-                                            {/* Centering crosshair */}
-                                            <div className="absolute top-1/2 left-0 w-full h-px bg-white/10" />
-                                            <div className="absolute left-1/2 top-0 h-full w-px bg-white/10" />
-
-                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max text-[12px] font-black text-white uppercase tracking-[0.3em] bg-purple-600 px-3 py-1 rounded-full shadow-lg">
+                                        <div className="w-[260px] h-[360px] border-4 border-dashed border-white/30 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.6)] relative">
+                                            {/* Text moved to bottom */}
+                                            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-max text-[14px] font-black text-white uppercase tracking-[0.3em] bg-purple-600/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-white/20">
                                                 얼굴을 맞춰주세요
                                             </div>
                                         </div>
@@ -207,23 +233,14 @@ export default function ScanPage() {
                     {capturedImage ? (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                            className="flex w-full items-center gap-6"
+                            className="flex flex-col w-full items-center gap-6"
                         >
                             <button
-                                onClick={retake}
-                                className="flex flex-col items-center gap-3 text-white/50 hover:text-white transition-colors group"
-                            >
-                                <div className="p-5 bg-white/5 rounded-3xl border border-white/10 group-hover:border-white/20 transition-all">
-                                    <RefreshCw className="w-8 h-8" />
-                                </div>
-                                <span className="text-[11px] font-black uppercase tracking-widest">Retake</span>
-                            </button>
-
-                            <button
                                 onClick={analyze}
-                                className="flex-1 py-7 bg-white text-black rounded-[2rem] font-black text-2xl shadow-[0_20px_40px_rgba(255,255,255,0.1)] hover:bg-purple-50 active:scale-95 transition-all"
+                                className="w-full py-10 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[2.5rem] font-black text-4xl shadow-[0_20px_80px_rgba(168,85,247,0.4)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 group"
                             >
-                                분석 개시
+                                <Zap className="w-8 h-8 fill-white group-hover:animate-bounce" />
+                                분석 시작
                             </button>
                         </motion.div>
                     ) : (
