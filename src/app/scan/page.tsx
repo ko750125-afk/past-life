@@ -233,20 +233,12 @@ export default function ScanPage() {
                                 </div>
                             )}
 
-                            {/* Face Guide Oval & Capture Hint - Centered Vertical Stack */}
+                            {/* Face Guide Oval - Always Visible Overlay */}
                             {!capturedImage && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
                                     <div className="w-[260px] h-[360px] border-4 border-dashed border-white/20 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.7)] relative mb-8">
                                         {/* Guide Lines */}
                                     </div>
-
-                                    <motion.div
-                                        animate={{ opacity: [0.5, 1, 0.5] }}
-                                        transition={{ duration: 2, repeat: Infinity }}
-                                        className="text-white text-2xl font-black uppercase tracking-[0.2em] text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
-                                    >
-                                        <span className="bg-black/40 px-6 py-2 rounded-full backdrop-blur-md border border-white/10">화면을 터치하여 촬영</span>
-                                    </motion.div>
                                 </div>
                             )}
 
@@ -256,28 +248,43 @@ export default function ScanPage() {
                 <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            {/* Analyze Hint - Fixed Bottom Overlay (Viewport Relative) */}
-            {capturedImage && (
-                <div className="fixed bottom-10 left-0 right-0 z-[100] flex justify-center pointer-events-none">
-                    <motion.div
-                        initial={{ y: 50, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        className="flex flex-row items-center gap-5 bg-black/80 backdrop-blur-xl px-12 py-5 rounded-full border border-yellow-500/50 shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
-                    >
+            {/* Unified Bottom Prompt Area - Always Fixed at Bottom */}
+            <div className="fixed bottom-16 left-0 right-0 z-[100] flex justify-center pointer-events-none text-center">
+                <AnimatePresence mode="wait">
+                    {!capturedImage ? (
                         <motion.div
-                            animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                            className="bg-yellow-400/20 p-2 rounded-full"
+                            key="capture-hint"
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -20, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="bg-black/40 px-6 py-3 rounded-full backdrop-blur-md border border-white/10 text-white text-lg font-black uppercase tracking-[0.2em] drop-shadow-lg"
                         >
-                            <Smartphone className="w-10 h-10 text-yellow-400 fill-yellow-400" />
+                            화면을 터치하여 촬영
                         </motion.div>
-                        <div className="text-yellow-400 font-bold text-xl leading-tight text-left">
-                            화면을 터치하면<br />
-                            <span className="text-white font-black text-2xl">분석이 시작됩니다</span>
-                        </div>
-                    </motion.div>
-                </div>
-            )}
+                    ) : (
+                        <motion.div
+                            key="analyze-hint"
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -20, opacity: 0 }}
+                            className="flex flex-row items-center gap-5 bg-black/80 backdrop-blur-xl px-12 py-5 rounded-full border border-yellow-500/50 shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
+                        >
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
+                                transition={{ duration: 1.5, repeat: Infinity }}
+                                className="bg-yellow-400/20 p-2 rounded-full"
+                            >
+                                <Smartphone className="w-10 h-10 text-yellow-400 fill-yellow-400" />
+                            </motion.div>
+                            <div className="text-yellow-400 font-bold text-xl leading-tight text-left">
+                                화면을 터치하면<br />
+                                <span className="text-white font-black text-2xl">분석이 시작됩니다</span>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
 
         </main>
     );
