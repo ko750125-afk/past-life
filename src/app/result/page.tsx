@@ -183,136 +183,51 @@ function ResultContent() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="z-10 max-w-md w-full flex flex-col items-center gap-6 pb-10"
+                className="z-10 max-w-md w-full flex flex-col items-center gap-8 pb-10"
             >
-                <div className="text-center space-y-2">
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="text-purple-300 font-medium tracking-widest text-sm uppercase"
-                    >
-                        전생 분석 완료
-                    </motion.p>
-                    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-white uppercase tracking-tighter">
-                        CHRONO REPORT
-                    </h1>
+                <div className="text-center space-y-4 w-full">
+                    <p className="text-purple-400 font-black tracking-[0.3em] text-sm uppercase">전생 분석 완료</p>
+                    <h2 className="text-6xl font-black text-white drop-shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+                        {result.entityName}
+                    </h2>
                 </div>
 
                 <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-                    className="w-full bg-white/10 backdrop-blur-lg rounded-3xl p-6 border border-white/10 shadow-2xl relative group hover:border-white/20 transition-all"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="w-full space-y-6"
                 >
-                    {/* Badge for Rare (Human) */}
-                    {isHuman && (
-                        <div className="absolute top-4 right-4 bg-yellow-500/20 border border-yellow-500/50 text-yellow-300 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-[0_0_10px_rgba(234,179,8,0.2)] animate-pulse">
-                            <Sparkles className="w-3 h-3" />
-                            RARE
+                    {/* Story Section */}
+                    <div className="text-left bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10">
+                        <h3 className="text-white/40 font-black mb-4 flex items-center gap-2 text-xs uppercase tracking-widest">
+                            <Sparkles className="w-3 h-3 text-purple-400" />
+                            Memory Log
+                        </h3>
+                        <div className="space-y-4 text-white/90 text-[17px] leading-relaxed word-keep-all font-medium">
+                            {result.story.split('\n\n').map((paragraph, idx) => (
+                                <p key={idx}>{paragraph}</p>
+                            ))}
                         </div>
-                    )}
-
-                    <div className={`absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-r ${isHuman ? 'from-purple-600 to-indigo-600' : 'from-green-600 to-emerald-600'} p-4 rounded-full shadow-lg shadow-purple-500/40 z-20`}>
-                        {isHuman ? <User className="w-8 h-8 text-white" /> : <PawPrint className="w-8 h-8 text-white" />}
                     </div>
 
-                    <div className="mt-12 text-center space-y-6">
-                        {/* Past Life Avatar Image */}
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.5, type: "spring" }}
-                            className="relative w-40 h-40 mx-auto"
-                        >
-                            <div className={`absolute inset-0 bg-gradient-to-br ${isHuman ? 'from-purple-500/20 to-indigo-500/20' : 'from-green-500/20 to-emerald-500/20'} rounded-full blur-3xl animate-pulse`} />
-                            <div className="relative w-full h-full bg-white/5 rounded-full border border-white/10 flex items-center justify-center text-8xl shadow-inner">
-                                {getEntityEmoji(result.entityName)}
-                            </div>
-                        </motion.div>
-
-                        <div>
-                            <span className="inline-block px-4 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-black text-purple-200 mb-2 uppercase tracking-widest">
-                                {result.nickname.split(' ')[0]}
-                            </span>
-                            <h2 className="text-4xl font-black text-white mb-2">{result.entityName}</h2>
-                        </div>
-
-                        {/* Timeline UI */}
-                        <Timeline birth={result.birthYear} death={result.deathYear} era={result.era.name} />
-
-                        <div className="h-px w-20 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto" />
-
-                        {/* Story Section */}
-                        <div className="text-left bg-black/40 p-5 rounded-2xl border border-white/5 mt-4">
-                            <h3 className="text-white font-black mb-3 flex items-center gap-2 text-xs uppercase tracking-widest opacity-60">
-                                <Sparkles className="w-3 h-3 text-purple-400" />
-                                Memory Log
-                            </h3>
-                            <div className="space-y-4 text-white/80 text-[15px] leading-relaxed word-keep-all font-medium">
-                                {result.story.split('\n\n').map((paragraph, idx) => (
-                                    <p key={idx}>{paragraph}</p>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Reincarnation Reason Section */}
-                        <div className="text-left bg-gradient-to-r from-purple-900/40 to-indigo-900/40 p-5 rounded-2xl border border-purple-500/20 mt-4">
-                            <h3 className="text-purple-300 font-black mb-3 flex items-center gap-2 text-xs uppercase tracking-widest">
-                                <Crown className="w-3 h-3" />
-                                인간으로 환생한 이유
-                            </h3>
-                            <p className="text-white/90 text-[15px] leading-relaxed word-keep-all font-bold italic">
-                                "{result.reincarnationReason}"
-                            </p>
-                        </div>
+                    {/* Reincarnation Reason Section */}
+                    <div className="text-left bg-gradient-to-r from-purple-900/40 to-indigo-900/40 p-6 rounded-3xl border border-purple-500/20 shadow-xl">
+                        <h3 className="text-purple-300 font-black mb-3 flex items-center gap-2 text-xs uppercase tracking-widest">
+                            <Crown className="w-3 h-3" />
+                            인간으로 환생한 이유
+                        </h3>
+                        <p className="text-white text-[17px] leading-relaxed word-keep-all font-bold italic">
+                            "{result.reincarnationReason}"
+                        </p>
                     </div>
                 </motion.div>
 
-                {/* Stats Section with Radar Chart and Compatibility Animal Section */}
-                <div className="grid grid-cols-1 gap-6 w-full">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.4 }}
-                        className="w-full bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/5"
-                    >
-                        <h3 className="text-sm font-black text-white/40 mb-4 flex items-center gap-2 uppercase tracking-widest">
-                            <Zap className="w-4 h-4 text-purple-500" />
-                            Temporal Stats
-                        </h3>
-                        <RadarChart stats={result.stats} isHuman={isHuman} />
-                    </motion.div>
-
-                    {/* Compatibility Animal Section */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.6 }}
-                        className="w-full bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/5"
-                    >
-                        <h3 className="text-sm font-black text-white/40 mb-4 flex items-center gap-2 uppercase tracking-widest">
-                            <Heart className="w-4 h-4 text-pink-500" />
-                            Best Companion
-                        </h3>
-                        <div className="bg-black/40 rounded-2xl p-6 text-center border border-white/5 flex flex-col items-center gap-4">
-                            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shadow-inner relative overflow-hidden">
-                                <div className="absolute inset-0 bg-pink-500/10 animate-pulse" />
-                                <span className="text-3xl relative z-10">{getEntityEmoji(result.compatibilityAnimal)}</span>
-                            </div>
-                            <div className="space-y-1">
-                                <div className="text-[10px] text-white/30 font-bold uppercase tracking-widest">나와 좋은 궁합 동물</div>
-                                <div className="text-2xl font-black text-white">{result.compatibilityAnimal}</div>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-
-                {/* Result Card Generation */}
+                {/* Result Card Generation - Now Primary Visual */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4 }}
                     className="w-full"
                 >
                     {result && <ResultCard result={result} />}
@@ -321,12 +236,12 @@ function ResultContent() {
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 1.0 }}
+                    transition={{ delay: 0.6 }}
                     className="flex w-full gap-4 pt-4"
                 >
                     <Link
                         href="/"
-                        className="flex-1 py-4 bg-gray-800 hover:bg-gray-700 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-95"
+                        className="flex-1 py-5 bg-white/10 hover:bg-white/20 rounded-2xl font-black text-white flex items-center justify-center gap-2 transition-all active:scale-95 border border-white/10"
                     >
                         처음으로
                     </Link>
@@ -346,9 +261,9 @@ function ResultContent() {
                                 alert('나의 전생 찾기 결과 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                             }
                         }}
-                        className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all active:scale-95"
+                        className="flex-[2] py-5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-black text-white flex items-center justify-center gap-2 shadow-2xl shadow-purple-500/30 hover:scale-[1.02] active:scale-95 transition-all text-xl"
                     >
-                        <Share2 className="w-5 h-5" />
+                        <Share2 className="w-6 h-6" />
                         공유하기
                     </button>
                 </motion.div>
