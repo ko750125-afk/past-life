@@ -224,37 +224,6 @@ export default function ScanPage() {
                                         className="w-full h-full object-cover transform scale-x-[-1]"
                                     />
 
-                                    {/* Face Guide Oval - Centered */}
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-                                        <div className="w-[260px] h-[360px] border-4 border-dashed border-white/20 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.7)] relative mb-24">
-                                            {/* No text here anymore */}
-                                        </div>
-
-                                        {/* Tap to capture hint - Optimized for button-free UI */}
-                                        <motion.div
-                                            animate={{ opacity: [0.4, 1, 0.4] }}
-                                            transition={{ duration: 2, repeat: Infinity }}
-                                            className="text-white text-3xl font-black uppercase tracking-[0.2em] text-center px-10 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] leading-tight"
-                                        >
-                                            {!capturedImage ? (
-                                                <>화면을 터치하여<br />전생 사진 촬영</>
-                                            ) : (
-                                                <div className="flex flex-col items-center gap-4">
-                                                    <motion.div
-                                                        animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
-                                                        transition={{ duration: 1.5, repeat: Infinity }}
-                                                        className="bg-white/20 p-4 rounded-full backdrop-blur-md border border-white/30"
-                                                    >
-                                                        <Smartphone className="w-12 h-12 text-yellow-400" />
-                                                    </motion.div>
-                                                    <div className="text-yellow-400 font-black text-4xl drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] bg-black/50 px-6 py-3 rounded-2xl backdrop-blur-sm border border-yellow-500/30">
-                                                        화면을 터치하면<br />분석이 시작됩니다
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </motion.div>
-                                    </div>
-
                                     {/* Scanning Line VFX */}
                                     <motion.div
                                         animate={{ top: ['10%', '90%', '10%'] }}
@@ -263,6 +232,39 @@ export default function ScanPage() {
                                     />
                                 </div>
                             )}
+
+                            {/* Face Guide Oval - Centered - Always Visible Overlay */}
+                            <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
+                                {!capturedImage && (
+                                    <div className="w-[260px] h-[360px] border-4 border-dashed border-white/20 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.7)] relative mb-24">
+                                        {/* No text here */}
+                                    </div>
+                                )}
+
+                                {/* Tap/Touch Hint - Overlay on top of everything */}
+                                <motion.div
+                                    animate={{ opacity: [0.8, 1, 0.8] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                    className="text-white text-3xl font-black uppercase tracking-[0.2em] text-center px-10 drop-shadow-[0_0_20px_rgba(0,0,0,0.8)] leading-tight absolute bottom-32 w-full z-50 pointer-events-none"
+                                >
+                                    {!capturedImage ? (
+                                        <>화면을 터치하여<br />전생 사진 촬영</>
+                                    ) : (
+                                        <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
+                                            <motion.div
+                                                animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
+                                                transition={{ duration: 1.5, repeat: Infinity }}
+                                                className="bg-white/20 p-4 rounded-full backdrop-blur-md border border-white/30 shadow-[0_0_30px_rgba(250,204,21,0.6)]"
+                                            >
+                                                <Smartphone className="w-12 h-12 text-yellow-300 fill-yellow-400/20" />
+                                            </motion.div>
+                                            <div className="text-yellow-300 font-black text-3xl drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)] bg-black/60 px-8 py-4 rounded-3xl backdrop-blur-md border border-yellow-500/50 shadow-2xl">
+                                                화면을 터치하면<br />분석이 시작됩니다
+                                            </div>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            </div>
                         </div>
                     )}
                 </AnimatePresence>
