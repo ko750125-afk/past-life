@@ -198,36 +198,31 @@ export default function ScanPage() {
                                     />
 
                                     {/* Face Guide Oval - Centered */}
-                                    <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                                        <div className="w-[260px] h-[360px] border-4 border-dashed border-white/30 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.6)] relative">
-                                            {/* Text moved to bottom of the oval */}
-                                            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-max text-[16px] font-black text-white uppercase tracking-[0.3em] bg-purple-600/90 backdrop-blur-md px-6 py-3 rounded-full shadow-2xl border border-white/20 animate-pulse">
-                                                얼굴을 맞춰주세요
-                                            </div>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
+                                        <div className="w-[260px] h-[360px] border-4 border-dashed border-white/20 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.7)] relative mb-24">
+                                            {/* No text here anymore */}
                                         </div>
+
+                                        {/* Tap to capture hint - Moved under oval and made larger */}
+                                        <motion.div
+                                            animate={{ opacity: [0.4, 1, 0.4] }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                            className="text-white text-2xl font-black uppercase tracking-[0.2em] drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                                        >
+                                            화면을 터치하여 촬영
+                                        </motion.div>
                                     </div>
 
                                     {/* Scanning Line VFX */}
                                     <motion.div
                                         animate={{ top: ['10%', '90%', '10%'] }}
-                                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                        className="absolute left-0 w-full h-[2px] bg-purple-400 shadow-[0_0_20px_rgba(168,85,247,1)] z-30"
+                                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                        className="absolute left-0 w-full h-[2px] bg-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.5)] z-30"
                                     />
-
-                                    {/* Tap to capture hint */}
-                                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40 text-[10px] font-bold uppercase tracking-[0.4em] z-30">
-                                        화면을 터치하여 촬영
-                                    </div>
                                 </div>
                             )}
 
-                            {/* HUD Static Corners */}
-                            <div className="absolute inset-4 sm:inset-10 border border-white/10 pointer-events-none z-10">
-                                <div className="absolute -top-1 -left-1 w-10 h-10 border-t-4 border-l-4 border-purple-500" />
-                                <div className="absolute -top-1 -right-1 w-10 h-10 border-t-4 border-r-4 border-purple-500" />
-                                <div className="absolute -bottom-1 -left-1 w-10 h-10 border-b-4 border-l-4 border-purple-500" />
-                                <div className="absolute -bottom-1 -right-1 w-10 h-10 border-b-4 border-r-4 border-purple-500" />
-                            </div>
+                            {/* HUD Static Corners Removed as per request */}
                         </div>
                     )}
                 </AnimatePresence>
@@ -235,40 +230,24 @@ export default function ScanPage() {
                 <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            {/* Controls - simplified or removed as per user request to avoid mis-operation */}
-            <div className="bg-[#030303] pt-6 pb-16 px-6 relative z-40 border-t border-white/5">
-                <div className="max-w-md mx-auto">
+            {/* Controls - Moved up and made much larger */}
+            <div className="bg-[#030303] px-6 relative z-40">
+                <div className="max-w-2xl mx-auto">
                     {capturedImage ? (
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                            className="flex flex-col w-full items-center gap-6"
+                            initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex flex-col w-full items-center -mt-32 pb-20"
                         >
                             <button
                                 onClick={analyze}
-                                className="w-full py-10 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[2.5rem] font-black text-4xl shadow-[0_20px_80px_rgba(168,85,247,0.4)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 group"
+                                className="w-full py-20 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[4rem] font-black text-6xl shadow-[0_30px_100px_rgba(168,85,247,0.6)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-8 group border-b-[12px] border-purple-800"
                             >
-                                <Zap className="w-8 h-8 fill-white group-hover:animate-bounce" />
+                                <Zap className="w-16 h-16 fill-white group-hover:animate-bounce" />
                                 분석 시작
-                            </button>
-
-                            <button
-                                onClick={retake}
-                                className="text-white/40 hover:text-white text-sm font-bold uppercase tracking-widest border-b border-white/10 pb-1 px-2"
-                            >
-                                다시 촬영하기
                             </button>
                         </motion.div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center py-4">
-                            <motion.div
-                                animate={{ scale: [1, 1.1, 1] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                                className="w-20 h-20 rounded-full border-2 border-white/10 flex items-center justify-center"
-                            >
-                                <Camera className="w-8 h-8 text-white/20" />
-                            </motion.div>
-                            <span className="mt-4 text-[10px] font-black text-white/20 uppercase tracking-[0.5em]">Ready to Sync</span>
-                        </div>
+                        <div className="h-20" /> /* Empty space where footer used to be */
                     )}
                 </div>
             </div>
