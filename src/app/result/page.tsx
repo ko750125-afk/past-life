@@ -8,6 +8,28 @@ import { generateSessionVariations, SessionResult } from "@/lib/past-life";
 import ResultCard from "./ResultCard";
 import { motion } from "framer-motion";
 
+// Helper to get emoji for entity
+const getEntityEmoji = (name: string) => {
+    const emojiMap: Record<string, string> = {
+        // Animals
+        "호랑이": "🐯", "곰": "🐻", "독수리": "🦅", "거북이": "🐢", "여우": "🦊",
+        "늑대": "🐺", "사슴": "🦌", "올빼미": "🦉", "고양이": "🐱", "강아지": "🐶",
+        "토끼": "🐰", "다람쥐": "🐿️", "판다": "🐼", "해태": "🦁", "용": "🐲",
+        // Human Jobs
+        "왕족": "👑", "장군": "⚔️", "철학자": "📜", "예술가": "🎨", "상인": "💰",
+        "농부": "👩‍🌾", "의사": "🩺", "학자": "📚", "대장장이": "⚒️", "탐험가": "🧭",
+        "시인": "🖋️", "건축가": "🏛️", "요리사": "👨‍🍳", "무녀": "🔮", "어부": "🎣",
+        "도공": "🏺", "궁수": "🏹", "악사": "🎵", "승려": "🙏", "역관": "🗣️",
+        "화원": "🖌️", "재상": "💂", "천문학자": "🔭", "서예가": "🖌️", "사냥꾼": "🏹",
+        "목수": "🔨", "약제사": "🌿", "주막 주인": "🍶", "뱃사공": "🛶", "광대": "🤡"
+    };
+
+    for (const [key, val] of Object.entries(emojiMap)) {
+        if (name.includes(key)) return val;
+    }
+    return "✨";
+};
+
 // Helper to get stat icon/color
 const getStatConfig = (key: string) => {
     switch (key) {
@@ -191,11 +213,24 @@ function ResultContent() {
                         </div>
                     )}
 
-                    <div className={`absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-r ${isHuman ? 'from-purple-600 to-indigo-600' : 'from-green-600 to-emerald-600'} p-4 rounded-full shadow-lg shadow-purple-500/40`}>
+                    <div className={`absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-r ${isHuman ? 'from-purple-600 to-indigo-600' : 'from-green-600 to-emerald-600'} p-4 rounded-full shadow-lg shadow-purple-500/40 z-20`}>
                         {isHuman ? <User className="w-8 h-8 text-white" /> : <PawPrint className="w-8 h-8 text-white" />}
                     </div>
 
-                    <div className="mt-8 text-center space-y-4">
+                    <div className="mt-12 text-center space-y-6">
+                        {/* Past Life Avatar Image */}
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 0.5, type: "spring" }}
+                            className="relative w-32 h-32 mx-auto"
+                        >
+                            <div className={`absolute inset-0 bg-gradient-to-br ${isHuman ? 'from-purple-500/20 to-indigo-500/20' : 'from-green-500/20 to-emerald-500/20'} rounded-full blur-2xl animate-pulse`} />
+                            <div className="relative w-full h-full bg-white/5 rounded-full border border-white/10 flex items-center justify-center text-6xl shadow-inner">
+                                {getEntityEmoji(result.entityName)}
+                            </div>
+                        </motion.div>
+
                         <div>
                             <span className="inline-block px-4 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-black text-purple-200 mb-2 uppercase tracking-widest">
                                 {result.nickname.split(' ')[0]}
@@ -250,8 +285,9 @@ function ResultContent() {
                             Best Companion
                         </h3>
                         <div className="bg-black/40 rounded-2xl p-6 text-center border border-white/5 flex flex-col items-center gap-4">
-                            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shadow-inner">
-                                <PawPrint className="w-8 h-8 text-white" />
+                            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shadow-inner relative overflow-hidden">
+                                <div className="absolute inset-0 bg-pink-500/10 animate-pulse" />
+                                <span className="text-3xl relative z-10">{getEntityEmoji(result.compatibilityAnimal)}</span>
                             </div>
                             <div className="space-y-1">
                                 <div className="text-[10px] text-white/30 font-bold uppercase tracking-widest">나와 좋은 궁합 동물</div>
@@ -279,12 +315,28 @@ function ResultContent() {
                 >
                     <Link
                         href="/scan"
-                        className="flex-1 py-4 bg-gray-800 hover:bg-gray-700 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all"
+                        className="flex-1 py-4 bg-gray-800 hover:bg-gray-700 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-95"
                     >
                         <RotateCcw className="w-5 h-5" />
                         다시 하기
                     </Link>
-                    <button className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all">
+                    <button
+                        onClick={() => {
+                            if (navigator.share) {
+                                navigator.share({
+                                    title: '나의 전생 리포트',
+                                    text: `나의 전생은 ${result.nickname} ${result.entityName}였습니다! 당신의 전생도 확인해보세요.`,
+                                    url: window.location.href,
+                                }).catch(() => {
+                                    alert('공유하기에 실패했습니다. 링크를 복사해주세요.');
+                                });
+                            } else {
+                                navigator.clipboard.writeText(window.location.href);
+                                alert('링크가 클립보드에 복사되었습니다!');
+                            }
+                        }}
+                        className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all active:scale-95"
+                    >
                         <Share2 className="w-5 h-5" />
                         공유하기
                     </button>

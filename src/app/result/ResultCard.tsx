@@ -52,24 +52,30 @@ export default function ResultCard({ result }: ResultCardProps) {
 
         // 3. Draw Silhouette (Generic shape based on type)
         ctx.save();
-        ctx.filter = "sepia(0.8) blur(1px)";
-        ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
         ctx.beginPath();
-        ctx.arc(WIDTH / 2, HEIGHT / 2 - 50, 150, 0, Math.PI * 2); // Simple circle for now as placeholder silhouette
+        ctx.arc(WIDTH / 2, HEIGHT / 2 - 100, 160, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
-        // 4. Apply Global Sepia Filter for the rest (conceptually, already applied to bg mostly by colors, but let's reinforce)
-        // Note: ctx.filter isn't supported in all browsers but modern ones are fine.
-        // However, for "saving", we need the pixels to actually BE sepia. 
-        // Since we are drawing fresh, we can just use sepia colors.
-
-        // 5. Draw Decorative Border
-        ctx.strokeStyle = "#5a4a42";
-        ctx.lineWidth = 10;
-        ctx.strokeRect(20, 20, WIDTH - 40, HEIGHT - 40);
-        ctx.lineWidth = 2;
-        ctx.strokeRect(30, 30, WIDTH - 60, HEIGHT - 60);
+        // 4. Draw Entity Emoji
+        ctx.font = "120px serif";
+        const getEmoji = (name: string) => {
+            const map: Record<string, string> = {
+                "호랑이": "🐯", "곰": "🐻", "독수리": "🦅", "거북이": "🐢", "여우": "🦊",
+                "늑대": "🐺", "사슴": "🦌", "올빼미": "🦉", "고양이": "🐱", "강아지": "🐶",
+                "토끼": "🐰", "다람쥐": "🐿️", "판다": "🐼", "해태": "🦁", "용": "🐲",
+                "왕족": "👑", "장군": "⚔️", "철학자": "📜", "예술가": "🎨", "상인": "💰",
+                "농부": "👩‍🌾", "의사": "🩺", "학자": "📚", "대장장이": "⚒️", "탐험가": "🧭",
+                "시인": "🖋️", "건축가": "🏛️", "요리사": "👨‍🍳", "무녀": "🔮", "어부": "🎣",
+                "도공": "🏺", "궁수": "🏹", "악사": "🎵", "승려": "🙏", "역관": "🗣️",
+                "화원": "🖌️", "재상": "💂", "천문학자": "🔭", "서예가": "🖌️", "사냥꾼": "🏹",
+                "목수": "🔨", "약제사": "🌿", "주막 주인": "🍶", "뱃사공": "🛶", "광대": "🤡"
+            };
+            for (const [k, v] of Object.entries(map)) if (name.includes(k)) return v;
+            return "✨";
+        };
+        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 100 + 40);
 
         // 6. Draw Text Overlay
         ctx.textAlign = "center";
@@ -77,34 +83,34 @@ export default function ResultCard({ result }: ResultCardProps) {
 
         // Title
         ctx.font = "bold 30px serif";
-        ctx.fillText("전생의 기록", WIDTH / 2, 100);
+        ctx.fillText("전생의 기록", WIDTH / 2, 80);
 
         // Nickname
-        ctx.font = "20px serif";
-        ctx.fillText(result.nickname, WIDTH / 2, 250);
+        ctx.font = "24px serif";
+        ctx.fillText(result.nickname, WIDTH / 2, 480);
 
         // Main Entity Name
         ctx.font = "bold 60px serif";
-        ctx.fillText(result.entityName, WIDTH / 2, 320);
+        ctx.fillText(result.entityName, WIDTH / 2, 550);
 
         // Era
-        ctx.font = "24px serif";
-        ctx.fillText(result.era.name, WIDTH / 2, 380);
+        ctx.font = "italic 24px serif";
+        ctx.fillText(result.era.name, WIDTH / 2, 590);
 
         // Birth - Death
         ctx.font = "20px serif";
         const birthStr = result.birthYear < 0 ? `기원전 ${Math.abs(result.birthYear)}` : `${result.birthYear}년`;
         const deathStr = result.deathYear < 0 ? `기원전 ${Math.abs(result.deathYear)}` : `${result.deathYear}년`;
-        ctx.fillText(`${birthStr} ~ ${deathStr} (향년 ${result.lifespanStats}세)`, WIDTH / 2, 420);
+        ctx.fillText(`${birthStr} ~ ${deathStr} (향년 ${result.lifespanStats}세)`, WIDTH / 2, 630);
 
-        // Stats or Job
-        ctx.font = "18px serif";
+        // Stats
+        ctx.font = "bold 18px sans-serif";
         const statSummary = `외모 ${result.stats.appearance} • 돈 ${result.stats.money} • 후손 ${result.stats.descendants}`;
-        ctx.fillText(statSummary, WIDTH / 2, 500);
+        ctx.fillText(statSummary, WIDTH / 2, 690);
 
         // Compatibility Animal
         ctx.font = "18px serif";
-        ctx.fillText(`궁합 동물: ${result.compatibilityAnimal}`, WIDTH / 2, 540);
+        ctx.fillText(`영혼의 단짝: ${result.compatibilityAnimal} ${getEmoji(result.compatibilityAnimal)}`, WIDTH / 2, 730);
 
         // Stamp/Seal (simulation)
         ctx.save();

@@ -159,8 +159,11 @@ export default function ScanPage() {
                 <div className="w-11"></div>
             </div>
 
-            {/* Scanning Area */}
-            <div className="flex-1 relative flex flex-col items-center justify-center bg-black overflow-hidden border-y border-white/10">
+            {/* Scanning Area / Main Capture Zone */}
+            <div
+                className="flex-1 relative flex flex-col items-center justify-center bg-black overflow-hidden border-y border-white/10 cursor-pointer"
+                onClick={!capturedImage ? captureImage : undefined}
+            >
                 <AnimatePresence mode="wait">
                     {error && !capturedImage ? (
                         <motion.div
@@ -170,7 +173,7 @@ export default function ScanPage() {
                             <ShieldCheck className="w-12 h-12 mx-auto mb-4 text-white/20" />
                             <p className="text-red-400 font-bold mb-6 word-keep-all">{error}</p>
                             <button
-                                onClick={() => startCamera()}
+                                onClick={(e) => { e.stopPropagation(); startCamera(); }}
                                 className="w-full py-4 bg-white/10 border border-white/20 rounded-2xl text-white font-bold hover:bg-white/20 transition-colors"
                             >
                                 시스템 리부팅
@@ -194,11 +197,11 @@ export default function ScanPage() {
                                         className="w-full h-full object-cover transform scale-x-[-1]"
                                     />
 
-                                    {/* Face Guide Oval */}
-                                    <div className="absolute inset-x-0 top-0 bottom-[15%] flex items-center justify-center z-20 pointer-events-none">
+                                    {/* Face Guide Oval - Centered */}
+                                    <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
                                         <div className="w-[260px] h-[360px] border-4 border-dashed border-white/30 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.6)] relative">
-                                            {/* Text moved to bottom */}
-                                            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-max text-[14px] font-black text-white uppercase tracking-[0.3em] bg-purple-600/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-white/20">
+                                            {/* Text moved to bottom of the oval */}
+                                            <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-max text-[16px] font-black text-white uppercase tracking-[0.3em] bg-purple-600/90 backdrop-blur-md px-6 py-3 rounded-full shadow-2xl border border-white/20 animate-pulse">
                                                 얼굴을 맞춰주세요
                                             </div>
                                         </div>
@@ -210,6 +213,11 @@ export default function ScanPage() {
                                         transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                                         className="absolute left-0 w-full h-[2px] bg-purple-400 shadow-[0_0_20px_rgba(168,85,247,1)] z-30"
                                     />
+
+                                    {/* Tap to capture hint */}
+                                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40 text-[10px] font-bold uppercase tracking-[0.4em] z-30">
+                                        화면을 터치하여 촬영
+                                    </div>
                                 </div>
                             )}
 
@@ -227,8 +235,8 @@ export default function ScanPage() {
                 <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            {/* Controls */}
-            <div className="bg-[#030303] pt-8 pb-16 px-6 relative z-40 border-t border-white/5">
+            {/* Controls - simplified or removed as per user request to avoid mis-operation */}
+            <div className="bg-[#030303] pt-6 pb-16 px-6 relative z-40 border-t border-white/5">
                 <div className="max-w-md mx-auto">
                     {capturedImage ? (
                         <motion.div
@@ -242,55 +250,24 @@ export default function ScanPage() {
                                 <Zap className="w-8 h-8 fill-white group-hover:animate-bounce" />
                                 분석 시작
                             </button>
+
+                            <button
+                                onClick={retake}
+                                className="text-white/40 hover:text-white text-sm font-bold uppercase tracking-widest border-b border-white/10 pb-1 px-2"
+                            >
+                                다시 촬영하기
+                            </button>
                         </motion.div>
                     ) : (
-                        <div className="flex items-center justify-center gap-10 md:gap-16">
-                            {/* Photo Upload */}
-                            <div className="flex flex-col items-center gap-4 group relative cursor-pointer">
-                                <input
-                                    type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" id="file-upload"
-                                    onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) {
-                                            setError("");
-                                            const reader = new FileReader();
-                                            reader.onload = (event) => {
-                                                const dataUrl = event.target?.result as string;
-                                                setCapturedImage(dataUrl);
-                                                const img = new Image();
-                                                img.onload = () => {
-                                                    if (canvasRef.current) {
-                                                        const canvas = canvasRef.current;
-                                                        const ctx = canvas.getContext("2d");
-                                                        if (ctx) {
-                                                            canvas.width = img.width; canvas.height = img.height;
-                                                            ctx.drawImage(img, 0, 0);
-                                                        }
-                                                    }
-                                                };
-                                                img.src = dataUrl;
-                                            };
-                                            reader.readAsDataURL(file);
-                                        }
-                                    }}
-                                />
-                                <div className="p-5 bg-white/5 rounded-3xl border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 transition-all">
-                                    <Smartphone className="w-8 h-8 text-white/40 group-hover:text-white transition-colors" />
-                                </div>
-                                <span className="text-[11px] font-black text-white/30 uppercase tracking-widest">사진 업로드</span>
-                            </div>
-
-                            {/* Center Capture Button */}
-                            <div className="flex flex-col items-center gap-5">
-                                <button
-                                    onClick={captureImage}
-                                    disabled={!!error && !navigator.mediaDevices?.getUserMedia}
-                                    className="w-28 h-28 rounded-full border-4 border-white/20 p-2 bg-white/5 active:scale-90 transition-all disabled:opacity-20 flex items-center justify-center group"
-                                >
-                                    <div className="w-full h-full rounded-full bg-white group-hover:scale-95 transition-transform shadow-[0_0_40px_rgba(255,255,255,0.5)]"></div>
-                                </button>
-                                <span className="text-[13px] font-black text-white uppercase tracking-widest">카메라</span>
-                            </div>
+                        <div className="flex flex-col items-center justify-center py-4">
+                            <motion.div
+                                animate={{ scale: [1, 1.1, 1] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="w-20 h-20 rounded-full border-2 border-white/10 flex items-center justify-center"
+                            >
+                                <Camera className="w-8 h-8 text-white/20" />
+                            </motion.div>
+                            <span className="mt-4 text-[10px] font-black text-white/20 uppercase tracking-[0.5em]">Ready to Sync</span>
                         </div>
                     )}
                 </div>
