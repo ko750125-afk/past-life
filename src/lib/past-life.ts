@@ -21,7 +21,6 @@ export const HUMAN_JOBS = [
     "화원", "재상", "천문학자", "서예가", "사냥꾼", "목수", "약제사", "주막 주인", "뱃사공", "광대"
 ];
 
-// Animals for analysis (entity type)
 export const ANIMALS = [
     { name: "호랑이", type: "predator", era: "all" },
     { name: "곰", type: "mammal", era: "all" },
@@ -40,7 +39,6 @@ export const ANIMALS = [
     { name: "용", type: "mythical", era: "ancient" }
 ];
 
-// Animals for compatibility (New requested feature)
 export const COMPATIBILITY_ANIMALS = [
     "용맹한 호랑이", "우직한 곰", "민첩한 표범", "지혜로운 여우", "충성스러운 강아지",
     "자유로운 독수리", "영리한 원숭이", "우아한 사슴", "고상한 학", "신비로운 용",
@@ -53,28 +51,36 @@ export const NICKNAME_TEMPLATES = [
     "운명을 거스르는", "시간을 달리는", "그림자 속의", "찬란한", "비운의"
 ];
 
-const STORY_INTRO = [
-    "{era}, {birthYear}년생인 당신은 전생에 무려 '{entityName}'(이)었습니다. 사실 당신이 태어날 때 무지개가 7개 떴다는 소문이 있었지만, 알고 보니 그냥 동네 꼬마들의 비눗방울이었다네요.",
-    "역사의 한 페이지에도 안 실린 {era}의 무명 시절, {birthYear}년에 태어난 당신은 역사상 가장 '킹받는' 표정의 {entityName}(으)로 유명했습니다.",
-    "시간의 강을 거슬러 도착한 {era}. 당신은 그곳에서 비주얼만은 범접 불가였던 {entityName}(으)로 살며, 지나가던 개도 멈춰 서서 구경하게 만들 정도로 존재감이 확실했군요."
-];
+const STORY_TEMPLATES: Record<string, string[]> = {
+    appearance: [
+        "전생의 당신은 {era} 최고의 비주얼을 자랑하던 {entityName}(으)로 이름을 날렸습니다. 지나가던 사람들이 당신의 미모에 눈이 멀어 길을 잃는 바람에 지역 경제가 일시적으로 마비될 정도였다고 하네요.",
+        "수려한 외모 덕분에 {era}의 모든 화가들이 당신을 모델로 쓰고 싶어 안달이 났었습니다. 당신이 한 번 웃으면 꽃들이 시샘하여 피지 않았고, 달조차 부끄러워 구름 뒤로 숨었다는 전설이 내려옵니다."
+    ],
+    money: [
+        "{era}의 경제를 쥐락펴락하던 큰손 {entityName}! 당신의 금고에는 금은보화가 너무 많아 문이 안 닫혔고, 매일 아침 전생의 당신이 하던 고민은 '오늘은 어떤 금맥을 뚫어볼까' 하는 행복한 고민뿐이었습니다.",
+        "전형적인 자산가였던 당신은 {era}에서 '돈이면 안 되는 게 없다'는 것을 몸소 증명하며 살았습니다. 엽전을 하도 많이 써서 당시 화폐 가치가 오르락내리락했다는 흥미로운 기록이 전해집니다."
+    ],
+    stamina: [
+        "강철 같은 체력을 가진 {era}의 무한 동력 {entityName}! 말 한 마리 없이 {era} 전역을 뛰어다녀도 숨 한 번 고르지 않았던 당신은, 당시 산신령들조차 당신의 폐활량에 혀를 내둘렀다고 합니다.",
+        "지치지 않는 에너자이저 같았던 당신의 전생. {era}의 험난한 지형을 내 집 안방처럼 누비며, 그 누구보다 활발하게 업적을 남겼습니다. 당신이 한 번 뛰면 땅이 흔들리고 바다가 갈라졌다는 과장 섞인 야사도 있군요."
+    ],
+    personality: [
+        "{era}에서 가장 인자하기로 소문난 성인군자 {entityName}. 당신의 넓은 마음은 태평양보다 넓어, 원수조차 당신의 품 안에서 눈물을 흘리며 개과천선하게 만들 정도로 성격이 정말 온화하셨네요.",
+        "화 한 번 내지 않고 평생을 웃으며 살았던 당신. {era} 사람들은 마음이 답답할 때면 당신을 찾아와 위로를 얻었습니다. 당신의 성격은 마치 봄날의 따스한 햇살처럼 주변을 항상 밝게 비춰주었군요."
+    ],
+    lifespan: [
+        "{era}의 살아있는 화석이라 불릴 만큼 장수했던 {entityName}. {lifespan}세라는 기록적인 나이까지 살며 수많은 역사의 변천사를 직접 목격하셨군요. 당신은 신선이 되기 직전까지 가셨던 진정한 장생의 달인이었습니다.",
+        "오랜 세월 동안 {era}의 산증인으로 사셨던 당신. 남들보다 두세 배는 긴 시간을 살면서 세상의 모든 지혜를 깨달았고, 그 지혜를 후대에 전수하며 여유로운 노년을 보내셨네요."
+    ],
+    descendants: [
+        "{era}의 가문을 엄청나게 번창시킨 축복의 주인공 {entityName}. 당신의 후손들이 나라 전체에 퍼져 있었기에, 명절이면 당신을 찾아오는 친척들이 줄을 서서 전국 교통이 마비될 정도였다고 합니다.",
+        "자손 복이 타고났던 당신의 전생. 아이들의 웃음소리가 끊이지 않는 집안에서 매일매일이 축제 같았습니다. 당신이 일궈놓은 큰 가문은 {era}의 근간을 이루는 중요한 세력이 되었군요."
+    ]
+};
 
-const STORY_LIFE = [
-    "당신은 {lifespan}세까지 꽤 치열하게 사셨는데, 사인은 무려 '지나가던 거북이와 눈싸움하다가 눈이 침침해져서 뒤로 넘어짐'이었습니다. 그래도 {statDescription}만큼은 당대 최고라며 동네 쥐들도 인정했다죠.",
-    "{statDescription} 재능이 너무 넘쳐나서 임금님도 당신에게 일자리를 제안했지만, '귀찮다'는 이유로 거절하고 평생 누워서 귤만 까 드셨다는 야사가 전해집니다.",
-    "역사는 당신을 {statDescription}의 귀재로 기억...하려 했으나, 사실 당신이 {lifespan}년 동안 한 일이라곤 맛집 탐방과 허세 섞인 시 한 편뿐이었네요. 하지만 그 시가 너무 웃겨서 소문이 다 났군요."
-];
-
-const STORY_ADVICE = [
-    "전생의 당신은 지금의 당신을 보며 '야, 나 때는 {entityName}여도 잘만 살았어!'라며 꼰대 기운 섞인 {statDescription} 응원을 보내고 있습니다. 기죽지 마세요, 조상님도 이불 킥 많이 하셨답니다.",
-    "조상님들이 하늘나라에서 당신의 MBTI를 맞히느라 토론 중이시지만, {entityName}였던 전생의 가오를 살려 오늘은 일단 배달 음식부터 시키고 생각하세요.",
-    "인생 뭐 있나요? 전생엔 {entityName}였는데! 내일 걱정은 내일의 나에게 맡기고, 오늘은 그냥 전생의 당신처럼 뻔뻔하게 살아가 보세요. 당신은 충분히 비범하니까요!"
-];
-
-const STORY_REASON = [
-    "당신이 이번 생에 인간으로 환생할 수 있었던 이유는, 전생에 {entityName}(으)로 살면서도 {statDescription}(을)를 발휘해 위기에 빠진 숲속 친구들을 구했기 때문입니다. 그 공덕이 하늘에 닿아 특별히 인간의 몸을 허락받았네요.",
-    "사실 {entityName} 시절, 당신은 {statDescription} 덕분에 만인의 우상이었고, 생을 마감할 때 '다음 생엔 맛있는 걸 더 많이 먹고 싶다'는 간절한 소원을 빌었습니다. 그 소원이 접수되어 미식의 즐거움을 아는 인간으로 태어났습니다.",
-    "전생의 {entityName}였던 당신은 그 누구보다 {statDescription}에 진심이었고, 자기보다 약한 존재를 위해 자신의 먹이를 양보하는 자비심을 보였습니다. 덕분에 이번 생엔 더 큰 베풂을 실천할 수 있는 인간의 기회를 얻었군요."
+const NO_STAT_STORY = [
+    "{era}에서 비주얼만은 범접 불가였던 {entityName}(으)로 살며, 지나가던 개도 멈춰 서서 구경하게 만들 정도로 존재감이 확실했군요. 사실 역사서에는 당신이 '킹받는 표정의 달인'이었다고 기록되어 있습니다.",
+    "역사의 한 페이지에도 안 실린 {era}의 무명 시절 속 {entityName}. {birthYear}년에 태어난 당신은 평범하지만 누구보다 뻔뻔하게 자신만의 길을 걸었던 비범한 영웅이었습니다."
 ];
 
 export interface Stats {
@@ -91,14 +97,14 @@ export interface PastLifeResult {
     era: Era;
     birthYear: number;
     deathYear: number;
-    lifespanStats: number; // Renamed to avoid confusion with Stats.lifespan
+    lifespanStats: number;
     entityName: string;
 }
 
 export interface SessionResult extends PastLifeResult {
     stats: Stats;
     nickname: string;
-    compatibilityAnimal: string; // Changed from items
+    compatibilityAnimal: string;
     story: string;
     reincarnationReason: string;
 }
@@ -131,59 +137,50 @@ export const determinePastLife = (seed: number): PastLifeResult => {
 };
 
 const generateStory = (base: PastLifeResult, stats: Stats, seed: number): string => {
-    const introIndex = Math.abs(seed) % STORY_INTRO.length;
-    const lifeIndex = Math.abs(seed * 7) % STORY_LIFE.length;
-    const adviceIndex = Math.abs(seed * 13) % STORY_ADVICE.length;
-
-    // Find highest stat for description
-    let maxStat = "appearance";
-    let maxVal = stats.appearance;
-    Object.entries(stats).forEach(([key, val]) => {
-        if (val > maxVal) {
-            maxVal = val;
-            maxStat = key;
-        }
-    });
-
-    const statMap: Record<string, string> = {
-        appearance: "아름다운 외모",
-        personality: "인자한 성격",
-        money: "막강한 재력",
-        stamina: "강인한 체력",
-        lifespan: "장수하는 복",
-        descendants: "자손 번창"
-    };
-
-    const statDescription = statMap[maxStat];
+    // Determine top stats (can be multiple)
+    const sortedStats = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+    const topStatKey = sortedStats[0][0];
+    const secondStatKey = sortedStats[1][0];
 
     const replaceVars = (text: string) => {
         return text
             .replace(/{era}/g, base.era.name)
             .replace(/{birthYear}/g, base.birthYear < 0 ? `기원전 ${Math.abs(base.birthYear)}` : `${base.birthYear}`)
             .replace(/{entityName}/g, base.entityName)
-            .replace(/{lifespan}/g, base.lifespanStats.toString())
-            .replace(/{statDescription}/g, statDescription);
+            .replace(/{lifespan}/g, base.lifespanStats.toString());
     };
 
-    const paragraphs = [
-        STORY_INTRO[introIndex],
-        STORY_LIFE[lifeIndex]
+    // Pick templates based on stats
+    const mainList = STORY_TEMPLATES[topStatKey] || NO_STAT_STORY;
+    const subList = STORY_TEMPLATES[secondStatKey] || NO_STAT_STORY;
+
+    const mainIdx = Math.abs(seed) % mainList.length;
+    const subIdx = Math.abs(seed * 7) % subList.length;
+
+    const selectedParagraphs = [
+        mainList[mainIdx],
+        subList[subIdx]
     ];
 
-    return paragraphs.map(p => replaceVars(p)).join("\n\n");
+    // Ensure they are different
+    if (selectedParagraphs[0] === selectedParagraphs[1]) {
+        selectedParagraphs[1] = NO_STAT_STORY[seed % NO_STAT_STORY.length];
+    }
+
+    return selectedParagraphs.map(p => replaceVars(p)).join("\n\n");
 };
+
+const STORY_REASON = [
+    "당신이 이번 생에 인간으로 환생할 수 있었던 이유는, 전생에 {entityName}(으)로 살면서도 {statDescription}(을)를 발휘해 위기에 빠진 숲속 친구들을 구했기 때문입니다.",
+    "생을 마감할 때 '다음 생엔 맛있는 걸 더 많이 먹고 싶다'는 간절한 소원을 빌었고, 당신의 뛰어난 {statDescription} 덕분에 그 소원이 접수되어 인간으로 태어났습니다.",
+    "전생의 {entityName}였던 당신은 그 누구보다 {statDescription}에 진심이었고, 베풂을 실천했기에 이번 생에 인간의 몸을 허락받았습니다."
+];
 
 const generateReason = (base: PastLifeResult, stats: Stats, seed: number): string => {
     const reasonIndex = Math.abs(seed * 17) % STORY_REASON.length;
-    // Find highest stat for description
-    let maxStat = "appearance";
-    let maxVal = stats.appearance;
-    Object.entries(stats).forEach(([key, val]) => {
-        if (val > maxVal) {
-            maxVal = val;
-            maxStat = key;
-        }
-    });
+    const sortedStats = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+    const topStatKey = sortedStats[0][0];
+
     const statMap: Record<string, string> = {
         appearance: "아름다운 외모",
         personality: "인자한 성격",
@@ -192,13 +189,10 @@ const generateReason = (base: PastLifeResult, stats: Stats, seed: number): strin
         lifespan: "장수하는 복",
         descendants: "자손 번창"
     };
-    const statDescription = statMap[maxStat];
 
     return STORY_REASON[reasonIndex]
-        .replace(/{era}/g, base.era.name)
-        .replace(/{birthYear}/g, base.birthYear.toString())
         .replace(/{entityName}/g, base.entityName)
-        .replace(/{statDescription}/g, statDescription);
+        .replace(/{statDescription}/g, statMap[topStatKey] || "남다른 능력");
 };
 
 export const generateSessionVariations = (seed: number, sessionId: string): SessionResult => {
