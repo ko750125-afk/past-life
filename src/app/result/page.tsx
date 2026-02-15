@@ -35,7 +35,7 @@ const getStatConfig = (key: string) => {
     switch (key) {
         case 'appearance': return { icon: Sparkles, label: '외모', color: 'text-pink-400' };
         case 'personality': return { icon: Heart, label: '성격', color: 'text-orange-400' };
-        case 'money': return { icon: Crown, label: '돈', color: 'text-yellow-400' };
+        case 'popularity': return { icon: Crown, label: '인기', color: 'text-yellow-400' };
         case 'stamina': return { icon: Zap, label: '체력', color: 'text-red-400' };
         case 'lifespan': return { icon: Clock, label: '수명', color: 'text-blue-400' };
         case 'descendants': return { icon: User, label: '후손', color: 'text-purple-400' };
@@ -47,7 +47,7 @@ const RadarChart = ({ stats, isHuman }: { stats: any, isHuman: boolean }) => {
     const size = 200;
     const center = size / 2;
     const radius = 80;
-    const keys = ['appearance', 'personality', 'money', 'stamina', 'lifespan', 'descendants'];
+    const keys = ['appearance', 'personality', 'popularity', 'stamina', 'lifespan', 'descendants'];
 
     // Calculate points
     const points = keys.map((key, i) => {

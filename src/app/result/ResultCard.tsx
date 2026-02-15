@@ -119,7 +119,7 @@ export default function ResultCard({ result }: ResultCardProps) {
 
         // Stats
         ctx.font = "bold 18px sans-serif";
-        const statSummary = `외모 ${result.stats.appearance} • 돈 ${result.stats.money} • 후손 ${result.stats.descendants}`;
+        const statSummary = `외모 ${result.stats.appearance} • 인기 ${result.stats.popularity} • 후손 ${result.stats.descendants}`;
         ctx.fillText(statSummary, WIDTH / 2, 690);
 
         // Compatibility Animal

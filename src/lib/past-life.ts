@@ -56,9 +56,9 @@ const STORY_TEMPLATES: Record<string, string[]> = {
         "전생의 당신은 {era} 최고의 비주얼을 자랑하던 {entityName}(으)로 이름을 날렸습니다. 지나가던 사람들이 당신의 미모에 눈이 멀어 길을 잃는 바람에 지역 경제가 일시적으로 마비될 정도였다고 하네요.",
         "수려한 외모 덕분에 {era}의 모든 화가들이 당신을 모델로 쓰고 싶어 안달이 났었습니다. 당신이 한 번 웃으면 꽃들이 시샘하여 피지 않았고, 달조차 부끄러워 구름 뒤로 숨었다는 전설이 내려옵니다."
     ],
-    money: [
-        "{era}의 경제를 쥐락펴락하던 큰손 {entityName}! 당신의 금고에는 금은보화가 너무 많아 문이 안 닫혔고, 매일 아침 전생의 당신이 하던 고민은 '오늘은 어떤 금맥을 뚫어볼까' 하는 행복한 고민뿐이었습니다.",
-        "전형적인 자산가였던 당신은 {era}에서 '돈이면 안 되는 게 없다'는 것을 몸소 증명하며 살았습니다. 엽전을 하도 많이 써서 당시 화폐 가치가 오르락내리락했다는 흥미로운 기록이 전해집니다."
+    popularity: [
+        "{era}의 아이돌이자 만인의 연인 {entityName}! 당신이 지나가면 남녀노소 할 것 없이 환호성을 질렀고, 당신의 털 끝 하나라도 만져보려는 팬들로 인해 거리가 마비되곤 했습니다.",
+        "전생의 당신은 {era}에서 '핵인싸' 그 자체였습니다. 당신 주변엔 언제나 친구들이 구름처럼 몰려들었고, 당신의 행동 하나하나가 당시 유행을 선도하는 트렌드가 되었습니다."
     ],
     stamina: [
         "강철 같은 체력을 가진 {era}의 무한 동력 {entityName}! 말 한 마리 없이 {era} 전역을 뛰어다녀도 숨 한 번 고르지 않았던 당신은, 당시 산신령들조차 당신의 폐활량에 혀를 내둘렀다고 합니다.",
@@ -86,7 +86,7 @@ const NO_STAT_STORY = [
 export interface Stats {
     appearance: number;    // 외모
     personality: number;   // 성격
-    money: number;         // 돈
+    popularity: number;    // 인기 (구 돈)
     stamina: number;       // 체력
     lifespan: number;      // 수명
     descendants: number;   // 후손
@@ -184,7 +184,7 @@ const generateReason = (base: PastLifeResult, stats: Stats, seed: number): strin
     const statMap: Record<string, string> = {
         appearance: "아름다운 외모",
         personality: "인자한 성격",
-        money: "막강한 재력",
+        popularity: "하늘을 찌르는 인기",
         stamina: "강인한 체력",
         lifespan: "장수하는 복",
         descendants: "자손 번창"
@@ -211,7 +211,7 @@ export const generateSessionVariations = (seed: number, sessionId: string): Sess
     const stats: Stats = {
         appearance: statVal(1),
         personality: statVal(2),
-        money: statVal(3),
+        popularity: statVal(3),
         stamina: statVal(4),
         lifespan: statVal(5),
         descendants: statVal(6),
