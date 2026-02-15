@@ -65,29 +65,19 @@ export default function ResultCard({ result }: ResultCardProps) {
             ctx.fill();
         }
 
-        // 3. Draw Clean White Circle for Contrast (No aura/막 effect)
-        ctx.save();
-        const centerX = WIDTH / 2;
-        const centerY = HEIGHT / 2 - 120;
-
-        ctx.fillStyle = "rgba(255, 255, 255, 0.9)"; // Solid clean white
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 200, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        // 4. Draw Entity Emoji - SHARP & CLEAR
+        // 3. Draw Entity Emoji - SHARP, LARGE & IMPACTFUL
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.font = "240px serif";
+        ctx.font = "320px serif";
 
-        // Use a very subtle sharp shadow for depth, no blur
-        ctx.shadowColor = "rgba(0,0,0,0.1)";
-        ctx.shadowBlur = 5;
+        // Subtle depth shadow to pop against paper texture
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = 15;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
 
-        // Centered in the circle (HEIGHT / 2 - 120)
-        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 120);
+        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 100);
         ctx.restore();
 
         // 6. Draw Text Overlay

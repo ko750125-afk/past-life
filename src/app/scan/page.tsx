@@ -230,13 +230,19 @@ export default function ScanPage() {
                                             {/* No text here anymore */}
                                         </div>
 
-                                        {/* Tap to capture hint - Moved under oval and made larger */}
+                                        {/* Tap to capture hint - Optimized for button-free UI */}
                                         <motion.div
                                             animate={{ opacity: [0.4, 1, 0.4] }}
                                             transition={{ duration: 2, repeat: Infinity }}
-                                            className="text-white text-3xl font-black uppercase tracking-[0.2em] drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] text-center px-6"
+                                            className="text-white text-3xl font-black uppercase tracking-[0.2em] text-center px-10 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] leading-tight"
                                         >
-                                            {!capturedImage ? "화면을 터치하여 촬영" : "화면을 터치하여 분석 시작"}
+                                            {!capturedImage ? (
+                                                <>화면을 터치하여<br />전생 사진 촬영</>
+                                            ) : (
+                                                <div className="text-yellow-400">
+                                                    화면을 터치하여<br />전생 분석 시작!
+                                                </div>
+                                            )}
                                         </motion.div>
                                     </div>
 
@@ -255,22 +261,6 @@ export default function ScanPage() {
                 <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            {/* Controls - Fixed to Bottom for Balance */}
-            {capturedImage && !loading && (
-                <motion.div
-                    initial={{ opacity: 0, y: 100 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="fixed bottom-0 left-0 right-0 z-50 p-6 bg-gradient-to-t from-black to-transparent"
-                >
-                    <button
-                        onClick={analyze}
-                        className="w-full py-20 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[4rem] font-black text-6xl shadow-[0_0_100px_rgba(168,85,247,0.8)] active:scale-95 transition-all flex items-center justify-center gap-8 group border-b-[12px] border-purple-800"
-                    >
-                        <Zap className="w-16 h-16 fill-white animate-bounce" />
-                        <span className="drop-shadow-lg">분석 시작</span>
-                    </button>
-                </motion.div>
-            )}
         </main>
     );
 }
