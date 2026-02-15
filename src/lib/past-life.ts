@@ -136,11 +136,40 @@ export const determinePastLife = (seed: number): PastLifeResult => {
     return { type, era, birthYear, deathYear, lifespanStats, entityName };
 };
 
+const LOW_STAT_STORIES: Record<string, string[]> = {
+    appearance: [
+        "하지만 외모에는 크게 신경 쓰지 않으셨군요. {era}의 패션 테러리스트로 불리며, 당신이 입는 옷마다 사람들의 웃음거리가 되곤 했습니다. 그래도 당신의 자신감만큼은 우주 정복급이었습니다.",
+        "솔직히 말해 {era}의 미적 기준과는 조금 거리가 있었습니다. 거울을 볼 때마다 '중요한 건 내면이지'라고 되뇌며 정신 승리의 달인이 되셨군요."
+    ],
+    popularity: [
+        "안타깝게도 인기는 조금 부족했습니다. {era}에서 당신이 주최한 잔치에 파리만 날렸다는 슬픈 전설이 있습니다. 덕분에 혼자 노는 법을 터득하여 고독을 즐기는 진정한 낭만파가 되셨네요.",
+        "주변에 사람이 별로 없어 '은둔형 외톨이'의 시초가 되셨습니다. 하지만 덕분에 인간관계의 스트레스 없이 자연과 벗 삼아 평화로운 삶을 즐기셨군요."
+    ],
+    stamina: [
+        "저질 체력의 소유자였던 {entityName}님. 밥 숟가락 들 힘도 아껴야 해서 하루의 절반을 누워서 보내셨습니다. {era} 사람들은 당신을 '와식 생활의 선구자'라 불렀습니다.",
+        "조금만 움직여도 숨이 턱 끝까지 차올라, 친구들이 술래잡기를 하자고 하면 항상 심판을 자처하셨군요. 뛰는 것보다 입으로 하는 모든 활동에 특화되셨던 것 같습니다."
+    ],
+    personality: [
+        "성격은... 조금 까칠하셨네요. {era}의 모든 사람과 싸울 기세로 사셨던 당신. '모두까기 인형'이라는 별명으로 불리며, 당신의 독설을 피하기 위해 사람들이 피해 다녔습니다.",
+        "타협을 모르는 불도저 같은 성격 탓에 적을 많이 만드셨군요. 하지만 그만큼 본인의 신념은 확고해서, 한 번 마음먹은 일은 끝까지 해내는 뚝심은 인정받았습니다."
+    ],
+    lifespan: [
+        "아쉽게도 가늘고 짧게 사셨군요. {era}의 맛있는 음식들을 다 먹어보기도 전에 요절하는 바람에, 먹다 죽은 귀신이 되어 구천을 떠돌 뻔했습니다.",
+        "건강 관리에 소홀하여 병치레가 잦았습니다. {era}의 의원들 사이에서 당신은 VIP 고객이었으며, 당신 덕분에 의학이 조금 발전했을지도 모릅니다."
+    ],
+    descendants: [
+        "자손 복은 지지리도 없으셨군요. 하지만 무자식이 상팔자라는 말을 위안 삼아 자유로운 영혼으로 사셨습니다. 홀로 떠난 여행에서 수많은 인연을 만나셨을 겁니다.",
+        "대를 이을 후손은 남기지 못했지만, 대신 당신의 이름 석 자는 남기셨...을까요? 아마 {era}의 바람처럼 자유롭게 살다가 홀가분하게 떠나셨던 것 같습니다."
+    ]
+};
+
 const generateStory = (base: PastLifeResult, stats: Stats, seed: number): string => {
     // Determine top stats (can be multiple)
     const sortedStats = Object.entries(stats).sort((a, b) => b[1] - a[1]);
     const topStatKey = sortedStats[0][0];
-    const secondStatKey = sortedStats[1][0];
+
+    // Determine lowest stat
+    const lowestStatKey = sortedStats[sortedStats.length - 1][0];
 
     const replaceVars = (text: string) => {
         return text
@@ -150,22 +179,22 @@ const generateStory = (base: PastLifeResult, stats: Stats, seed: number): string
             .replace(/{lifespan}/g, base.lifespanStats.toString());
     };
 
-    // Pick templates based on stats
+    // Pick Positive Template (Top Stat)
     const mainList = STORY_TEMPLATES[topStatKey] || NO_STAT_STORY;
-    const subList = STORY_TEMPLATES[secondStatKey] || NO_STAT_STORY;
-
     const mainIdx = Math.abs(seed) % mainList.length;
+
+    // Pick Negative/Funny Template (Lowest Stat)
+    // If by chance top and lowest are same (e.g. all equal), fall back to NO_STAT_STORY or another positive
+    const subList = (topStatKey !== lowestStatKey && LOW_STAT_STORIES[lowestStatKey])
+        ? LOW_STAT_STORIES[lowestStatKey]
+        : STORY_TEMPLATES[sortedStats[1][0]] || NO_STAT_STORY;
+
     const subIdx = Math.abs(seed * 7) % subList.length;
 
     const selectedParagraphs = [
         mainList[mainIdx],
         subList[subIdx]
     ];
-
-    // Ensure they are different
-    if (selectedParagraphs[0] === selectedParagraphs[1]) {
-        selectedParagraphs[1] = NO_STAT_STORY[seed % NO_STAT_STORY.length];
-    }
 
     return selectedParagraphs.map(p => replaceVars(p)).join("\n\n");
 };
