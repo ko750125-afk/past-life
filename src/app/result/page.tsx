@@ -11,12 +11,12 @@ import { motion } from "framer-motion";
 // Helper to get stat icon/color
 const getStatConfig = (key: string) => {
     switch (key) {
-        case 'charisma': return { icon: Crown, label: '카리스마', color: 'text-yellow-400' };
-        case 'survivability': return { icon: Heart, label: '생존력', color: 'text-red-400' };
-        case 'strategy': return { icon: Anchor, label: '전략성', color: 'text-blue-400' };
-        case 'intuition': return { icon: Eye, label: '직관력', color: 'text-purple-400' };
-        case 'influence': return { icon: Zap, label: '영향력', color: 'text-orange-400' };
-        case 'fate': return { icon: Star, label: '운명지수', color: 'text-pink-400' };
+        case 'appearance': return { icon: Sparkles, label: '외모', color: 'text-pink-400' };
+        case 'personality': return { icon: Heart, label: '성격', color: 'text-orange-400' };
+        case 'money': return { icon: Crown, label: '돈', color: 'text-yellow-400' };
+        case 'stamina': return { icon: Zap, label: '체력', color: 'text-red-400' };
+        case 'lifespan': return { icon: Clock, label: '수명', color: 'text-blue-400' };
+        case 'descendants': return { icon: User, label: '후손', color: 'text-purple-400' };
         default: return { icon: Star, label: key, color: 'text-white' };
     }
 };
@@ -25,7 +25,7 @@ const RadarChart = ({ stats, isHuman }: { stats: any, isHuman: boolean }) => {
     const size = 200;
     const center = size / 2;
     const radius = 80;
-    const keys = ['charisma', 'survivability', 'strategy', 'intuition', 'influence', 'fate'];
+    const keys = ['appearance', 'personality', 'money', 'stamina', 'lifespan', 'descendants'];
 
     // Calculate points
     const points = keys.map((key, i) => {
@@ -135,8 +135,8 @@ function ResultContent() {
         const seed = parseInt(seedParam, 10);
         if (isNaN(seed)) return;
 
-        // Fixed or simple session for demo refresh
-        const sessionId = Math.random().toString(36).substring(7);
+        // Fixed session for consistent result per refresh if needed, or simple random
+        const sessionId = "past-life-session-123";
         const sessionResult = generateSessionVariations(seed, sessionId);
         setResult(sessionResult);
     }, [searchParams]);
@@ -172,8 +172,8 @@ function ResultContent() {
                     >
                         전생 분석 완료
                     </motion.p>
-                    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-white">
-                        당신의 전생
+                    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-white uppercase tracking-tighter">
+                        CHRONO REPORT
                     </h1>
                 </div>
 
@@ -197,11 +197,11 @@ function ResultContent() {
 
                     <div className="mt-8 text-center space-y-4">
                         <div>
-                            <span className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-gray-300 mb-2">
-                                {result.nickname}
+                            <span className="inline-block px-4 py-1 rounded-full bg-white/10 border border-white/20 text-[10px] font-black text-purple-200 mb-2 uppercase tracking-widest">
+                                {result.nickname.split(' ')[0]}
                             </span>
-                            <h2 className="text-3xl font-bold text-white mb-2">{result.entityName}</h2>
-                            <div className="text-purple-200 font-medium">{result.era.name} 시대</div>
+                            <h2 className="text-4xl font-black text-white mb-2">{result.entityName}</h2>
+                            <div className="text-purple-200/60 font-medium text-sm">{result.era.name}</div>
                         </div>
 
                         {/* Timeline UI */}
@@ -210,12 +210,12 @@ function ResultContent() {
                         <div className="h-px w-20 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto" />
 
                         {/* Story Section */}
-                        <div className="text-left bg-black/30 p-5 rounded-xl border border-white/5 mt-4">
-                            <h3 className="text-purple-300 font-bold mb-3 flex items-center gap-2 text-sm">
-                                <Sparkles className="w-4 h-4" />
-                                전생의 기억
+                        <div className="text-left bg-black/40 p-5 rounded-2xl border border-white/5 mt-4">
+                            <h3 className="text-white font-black mb-3 flex items-center gap-2 text-xs uppercase tracking-widest opacity-60">
+                                <Sparkles className="w-3 h-3 text-purple-400" />
+                                Memory Log
                             </h3>
-                            <div className="space-y-4 text-gray-300 text-sm leading-relaxed word-keep-all max-h-60 overflow-y-auto pr-2 scrollbar-hide">
+                            <div className="space-y-4 text-white/80 text-[15px] leading-relaxed word-keep-all font-medium">
                                 {result.story.split('\n\n').map((paragraph, idx) => (
                                     <p key={idx}>{paragraph}</p>
                                 ))}
@@ -224,42 +224,43 @@ function ResultContent() {
                     </div>
                 </motion.div>
 
-                {/* Stats Section with Radar Chart */}
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="w-full bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/5"
-                >
-                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-yellow-400" />
-                        전생 능력치
-                    </h3>
-                    <RadarChart stats={result.stats} isHuman={isHuman} />
-                </motion.div>
+                {/* Stats Section with Radar Chart and Compatibility Animal Section */}
+                <div className="grid grid-cols-1 gap-6 w-full">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="w-full bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/5"
+                    >
+                        <h3 className="text-sm font-black text-white/40 mb-4 flex items-center gap-2 uppercase tracking-widest">
+                            <Zap className="w-4 h-4 text-purple-500" />
+                            Temporal Stats
+                        </h3>
+                        <RadarChart stats={result.stats} isHuman={isHuman} />
+                    </motion.div>
 
-                {/* Items Section */}
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 }}
-                    className="w-full bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/5"
-                >
-                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <Crown className="w-4 h-4 text-yellow-400" />
-                        상징 아이템
-                    </h3>
-                    <div className="flex gap-4">
-                        {result.items.map((item, idx) => (
-                            <div key={idx} className="flex-1 bg-black/20 rounded-xl p-3 text-center border border-white/5 flex flex-col items-center gap-2">
-                                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                                    <Star className="w-5 h-5 text-gray-300" />
-                                </div>
-                                <span className="text-sm text-gray-200">{item}</span>
+                    {/* Compatibility Animal Section */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="w-full bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/5"
+                    >
+                        <h3 className="text-sm font-black text-white/40 mb-4 flex items-center gap-2 uppercase tracking-widest">
+                            <Heart className="w-4 h-4 text-pink-500" />
+                            Best Companion
+                        </h3>
+                        <div className="bg-black/40 rounded-2xl p-6 text-center border border-white/5 flex flex-col items-center gap-4">
+                            <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shadow-inner">
+                                <PawPrint className="w-8 h-8 text-white" />
                             </div>
-                        ))}
-                    </div>
-                </motion.div>
+                            <div className="space-y-1">
+                                <div className="text-[10px] text-white/30 font-bold uppercase tracking-widest">나와 좋은 궁합 동물</div>
+                                <div className="text-2xl font-black text-white">{result.compatibilityAnimal}</div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
 
                 {/* Result Card Generation */}
                 <motion.div

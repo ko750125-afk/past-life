@@ -95,16 +95,16 @@ export default function ResultCard({ result }: ResultCardProps) {
         ctx.font = "20px serif";
         const birthStr = result.birthYear < 0 ? `기원전 ${Math.abs(result.birthYear)}` : `${result.birthYear}년`;
         const deathStr = result.deathYear < 0 ? `기원전 ${Math.abs(result.deathYear)}` : `${result.deathYear}년`;
-        ctx.fillText(`${birthStr} ~ ${deathStr} (향년 ${result.lifespan}세)`, WIDTH / 2, 420);
+        ctx.fillText(`${birthStr} ~ ${deathStr} (향년 ${result.lifespanStats}세)`, WIDTH / 2, 420);
 
         // Stats or Job
         ctx.font = "18px serif";
-        const statSummary = `카리스마 ${result.stats.charisma} • 직관력 ${result.stats.intuition} • 운명 ${result.stats.fate}`;
+        const statSummary = `외모 ${result.stats.appearance} • 돈 ${result.stats.money} • 후손 ${result.stats.descendants}`;
         ctx.fillText(statSummary, WIDTH / 2, 500);
 
-        // Items
+        // Compatibility Animal
         ctx.font = "18px serif";
-        ctx.fillText(`유품: ${result.items.join(", ")}`, WIDTH / 2, 540);
+        ctx.fillText(`궁합 동물: ${result.compatibilityAnimal}`, WIDTH / 2, 540);
 
         // Stamp/Seal (simulation)
         ctx.save();
@@ -126,24 +126,24 @@ export default function ResultCard({ result }: ResultCardProps) {
 
     return (
         <div className="flex flex-col items-center gap-4 mt-8">
-            <h3 className="text-purple-300 font-bold flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                전생 카드 발급
+            <h3 className="text-white/40 font-black flex items-center gap-2 text-[10px] uppercase tracking-[0.2em]">
+                <Download className="w-3 h-3" />
+                Download ID Card
             </h3>
 
             {/* Hidden canvas for generation, or visible if we want to show preview */}
-            <div className="rounded-xl overflow-hidden shadow-2xl border border-white/20">
-                <canvas ref={canvasRef} className="max-w-full h-auto w-[300px]" />
+            <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/10 p-2 bg-white/5">
+                <canvas ref={canvasRef} className="max-w-full h-auto w-[280px] rounded-2xl" />
             </div>
 
             {downloadUrl && (
                 <a
                     href={downloadUrl}
                     download={`past-life-${result.entityName}.png`}
-                    className="px-6 py-2 bg-amber-700 hover:bg-amber-600 text-amber-100 rounded-full font-bold transition-colors flex items-center gap-2 text-sm"
+                    className="w-full py-4 bg-white text-black rounded-2xl font-black transition-all flex items-center justify-center gap-2 text-sm active:scale-95 shadow-xl"
                 >
                     <Download className="w-4 h-4" />
-                    이미지로 저장
+                    파일로 저장하기
                 </a>
             )}
         </div>
