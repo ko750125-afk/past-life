@@ -41,20 +41,8 @@ export default function ResultCard({ result }: ResultCardProps) {
         canvas.width = WIDTH;
         canvas.height = HEIGHT;
 
-        // 2. Draw Background (Era based color/gradient)
-        const gradient = ctx.createLinearGradient(0, 0, 0, HEIGHT);
-
-        // Era specific hues
-        let hue = 30; // Default brown/sepia
-        if (result.era.name.includes("고조선") || result.era.name.includes("선사")) hue = 40;
-        else if (result.era.name.includes("삼국")) hue = 200; // Blueish
-        else if (result.era.name.includes("고려")) hue = 120; // Greenish (Celadon)
-        else if (result.era.name.includes("조선")) hue = 30; // Paper-like
-
-        gradient.addColorStop(0, `hsl(${hue}, 40%, 80%)`);
-        gradient.addColorStop(1, `hsl(${hue}, 30%, 60%)`);
-
-        ctx.fillStyle = gradient;
+        // 2. Draw Background (Standard Paper, No Gradient/Decoration)
+        ctx.fillStyle = "#fcf6e5"; // Clean warm paper color
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Add noise/paper texture effect
@@ -65,18 +53,6 @@ export default function ResultCard({ result }: ResultCardProps) {
             ctx.fill();
         }
 
-        // 3. Draw Watercolor/Ink Splash Background (Natural highlight)
-        ctx.save();
-        const splashGradient = ctx.createRadialGradient(WIDTH / 2, HEIGHT / 2 - 100, 50, WIDTH / 2, HEIGHT / 2 - 100, 250);
-        splashGradient.addColorStop(0, `hsla(${hue}, 100%, 95%, 0.8)`); // Bright center
-        splashGradient.addColorStop(0.4, `hsla(${hue}, 100%, 90%, 0.4)`); // Soft middle
-        splashGradient.addColorStop(1, `hsla(${hue}, 100%, 90%, 0)`); // Fade out
-
-        ctx.fillStyle = splashGradient;
-        ctx.beginPath();
-        ctx.arc(WIDTH / 2, HEIGHT / 2 - 100, 250, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -117,10 +93,18 @@ export default function ResultCard({ result }: ResultCardProps) {
         const deathStr = result.deathYear < 0 ? `기원전 ${Math.abs(result.deathYear)}` : `${result.deathYear}년`;
         ctx.fillText(`${birthStr} ~ ${deathStr} (향년 ${result.lifespanStats}세)`, WIDTH / 2, 630);
 
-        // Stats
+        // Stats - Dynamic Top 3
         ctx.font = "bold 18px sans-serif";
-        const statSummary = `외모 ${result.stats.appearance} • 인기 ${result.stats.popularity} • 후손 ${result.stats.descendants}`;
-        ctx.fillText(statSummary, WIDTH / 2, 690);
+        const statsLabels: Record<string, string> = {
+            appearance: '외모', personality: '성격', popularity: '인기',
+            stamina: '체력', lifespan: '수명', descendants: '후손'
+        };
+        const topStats = Object.entries(result.stats)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 3)
+            .map(([key, val]) => `${statsLabels[key]} ${val}`)
+            .join(" • ");
+        ctx.fillText(topStats, WIDTH / 2, 690);
 
         // Compatibility Animal
         ctx.font = "18px serif";
