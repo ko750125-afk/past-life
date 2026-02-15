@@ -158,38 +158,41 @@ export default function ScanPage() {
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
-                                <div className="absolute inset-0">
+                                <div className="absolute inset-0 flex items-center justify-center">
                                     <video
                                         ref={videoRef}
                                         autoPlay playsInline muted
                                         className="w-full h-full object-cover transform scale-x-[-1]"
                                     />
 
-                                    {/* Face Guide Oval */}
-                                    <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                                        <div className="w-[240px] h-[320px] border-2 border-dashed border-white/50 rounded-[120px/160px] shadow-[0_0_0_9999px_rgba(3,3,3,0.6)]">
-                                            {/* Corner accents inside the oval zone */}
-                                            <div className="absolute inset-0 animate-pulse">
-                                                <div className="absolute top-10 left-1/2 -translate-x-1/2 text-[10px] font-bold text-white/70 uppercase tracking-widest">Align Face</div>
+                                    {/* Face Guide Oval - Lifted slightly for better face framing */}
+                                    <div className="absolute inset-x-0 top-0 bottom-[15%] flex items-center justify-center z-20 pointer-events-none">
+                                        <div className="w-[260px] h-[360px] border-4 border-dashed border-white/40 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.6)] relative">
+                                            {/* Centering crosshair */}
+                                            <div className="absolute top-1/2 left-0 w-full h-px bg-white/10" />
+                                            <div className="absolute left-1/2 top-0 h-full w-px bg-white/10" />
+
+                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max text-[12px] font-black text-white uppercase tracking-[0.3em] bg-purple-600 px-3 py-1 rounded-full shadow-lg">
+                                                얼굴을 맞춰주세요
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Scanning Line VFX */}
                                     <motion.div
-                                        animate={{ top: ['0%', '100%', '0%'] }}
-                                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                                        className="absolute left-0 w-full h-[2px] bg-purple-500/60 shadow-[0_0_15px_rgba(168,85,247,0.8)] z-30"
+                                        animate={{ top: ['10%', '90%', '10%'] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                        className="absolute left-0 w-full h-[2px] bg-purple-400 shadow-[0_0_20px_rgba(168,85,247,1)] z-30"
                                     />
                                 </div>
                             )}
 
                             {/* HUD Static Corners */}
-                            <div className="absolute inset-8 border border-white/10 pointer-events-none z-10">
-                                <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-purple-500" />
-                                <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-purple-500" />
-                                <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-2 border-l-2 border-purple-500" />
-                                <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-purple-500" />
+                            <div className="absolute inset-4 sm:inset-10 border border-white/10 pointer-events-none z-10">
+                                <div className="absolute -top-1 -left-1 w-10 h-10 border-t-4 border-l-4 border-purple-500" />
+                                <div className="absolute -top-1 -right-1 w-10 h-10 border-t-4 border-r-4 border-purple-500" />
+                                <div className="absolute -bottom-1 -left-1 w-10 h-10 border-b-4 border-l-4 border-purple-500" />
+                                <div className="absolute -bottom-1 -right-1 w-10 h-10 border-b-4 border-r-4 border-purple-500" />
                             </div>
                         </div>
                     )}
@@ -199,34 +202,34 @@ export default function ScanPage() {
             </div>
 
             {/* Controls */}
-            <div className="bg-[#030303] p-10 pb-16 relative">
+            <div className="bg-[#030303] pt-8 pb-16 px-6 relative z-40 border-t border-white/5">
                 <div className="max-w-md mx-auto">
                     {capturedImage ? (
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                             className="flex w-full items-center gap-6"
                         >
                             <button
                                 onClick={retake}
                                 className="flex flex-col items-center gap-3 text-white/50 hover:text-white transition-colors group"
                             >
-                                <div className="p-5 bg-white/5 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all">
-                                    <RefreshCw className="w-7 h-7" />
+                                <div className="p-5 bg-white/5 rounded-3xl border border-white/10 group-hover:border-white/20 transition-all">
+                                    <RefreshCw className="w-8 h-8" />
                                 </div>
                                 <span className="text-[11px] font-black uppercase tracking-widest">Retake</span>
                             </button>
 
                             <button
                                 onClick={analyze}
-                                className="flex-1 py-6 bg-white text-black rounded-3xl font-black text-2xl shadow-xl hover:bg-purple-50 active:scale-95 transition-all"
+                                className="flex-1 py-7 bg-white text-black rounded-[2rem] font-black text-2xl shadow-[0_20px_40px_rgba(255,255,255,0.1)] hover:bg-purple-50 active:scale-95 transition-all"
                             >
                                 분석 개시
                             </button>
                         </motion.div>
                     ) : (
-                        <div className="grid grid-cols-3 items-end w-full">
+                        <div className="flex items-center justify-center gap-10 md:gap-16">
                             {/* Photo Upload */}
-                            <div className="flex flex-col items-center gap-3 group relative cursor-pointer">
+                            <div className="flex flex-col items-center gap-4 group relative cursor-pointer">
                                 <input
                                     type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" id="file-upload"
                                     onChange={(e) => {
@@ -254,26 +257,23 @@ export default function ScanPage() {
                                         }
                                     }}
                                 />
-                                <div className="p-5 bg-white/5 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all">
-                                    <Smartphone className="w-8 h-8 text-white/50 group-hover:text-white transition-colors" />
+                                <div className="p-5 bg-white/5 rounded-3xl border border-white/10 group-hover:border-white/20 group-hover:bg-white/10 transition-all">
+                                    <Smartphone className="w-8 h-8 text-white/40 group-hover:text-white transition-colors" />
                                 </div>
-                                <span className="text-[11px] font-black text-white/40 uppercase tracking-widest">사진 업로드</span>
+                                <span className="text-[11px] font-black text-white/30 uppercase tracking-widest">사진 업로드</span>
                             </div>
 
                             {/* Center Capture Button */}
-                            <div className="flex flex-col items-center gap-4">
+                            <div className="flex flex-col items-center gap-5">
                                 <button
                                     onClick={captureImage}
                                     disabled={!!error && !navigator.mediaDevices?.getUserMedia}
-                                    className="w-24 h-24 rounded-full border-4 border-white/30 p-1.5 bg-white/5 active:scale-90 transition-all disabled:opacity-20 flex items-center justify-center group"
+                                    className="w-28 h-28 rounded-full border-4 border-white/20 p-2 bg-white/5 active:scale-90 transition-all disabled:opacity-20 flex items-center justify-center group"
                                 >
-                                    <div className="w-full h-full rounded-full bg-white group-hover:scale-95 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.4)]"></div>
+                                    <div className="w-full h-full rounded-full bg-white group-hover:scale-95 transition-transform shadow-[0_0_40px_rgba(255,255,255,0.5)]"></div>
                                 </button>
-                                <span className="text-[12px] font-black text-white uppercase tracking-widest">카메라</span>
+                                <span className="text-[13px] font-black text-white uppercase tracking-widest">카메라</span>
                             </div>
-
-                            {/* Balanced Spacer for Grid alignment */}
-                            <div className="w-full h-full"></div>
                         </div>
                     )}
                 </div>

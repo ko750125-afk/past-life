@@ -64,16 +64,16 @@ export default function Home() {
 
         {/* Action Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 1, type: "spring" }}
           className="w-full"
         >
           <Link
             href="/scan"
-            className="w-full py-8 px-8 bg-white text-black hover:bg-purple-100 rounded-3xl font-black text-3xl shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-300 flex items-center justify-center gap-4 active:scale-95 group relative overflow-hidden"
+            className="w-full py-10 px-8 bg-white text-black hover:bg-purple-100 rounded-[2.5rem] font-black text-4xl md:text-5xl shadow-[0_20px_80px_rgba(255,255,255,0.3)] transition-all duration-300 flex flex-col items-center justify-center gap-4 active:scale-95 group relative overflow-hidden border-b-8 border-gray-300 active:border-b-0 active:translate-y-2"
           >
-            <Zap className="w-8 h-8 fill-black" />
+            <Zap className="w-12 h-12 fill-black mb-2 animate-bounce" />
             타임머신 가동
           </Link>
         </motion.div>
