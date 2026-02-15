@@ -52,14 +52,14 @@ export default function ResultCard({ result }: ResultCardProps) {
 
         // 3. Draw Silhouette (Generic shape based on type)
         ctx.save();
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.03)";
         ctx.beginPath();
-        ctx.arc(WIDTH / 2, HEIGHT / 2 - 100, 160, 0, Math.PI * 2);
+        ctx.arc(WIDTH / 2, HEIGHT / 2 - 120, 200, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
-        // 4. Draw Entity Emoji
-        ctx.font = "120px serif";
+        // 4. Draw Entity Emoji - MUCCCH LARGER as requested
+        ctx.font = "240px serif";
         const getEmoji = (name: string) => {
             const map: Record<string, string> = {
                 "호랑이": "🐯", "곰": "🐻", "독수리": "🦅", "거북이": "🐢", "여우": "🦊",
@@ -75,7 +75,7 @@ export default function ResultCard({ result }: ResultCardProps) {
             for (const [k, v] of Object.entries(map)) if (name.includes(k)) return v;
             return "✨";
         };
-        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 100 + 40);
+        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 120 + 80);
 
         // 6. Draw Text Overlay
         ctx.textAlign = "center";

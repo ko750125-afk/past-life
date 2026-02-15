@@ -223,10 +223,10 @@ function ResultContent() {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: 0.5, type: "spring" }}
-                            className="relative w-32 h-32 mx-auto"
+                            className="relative w-40 h-40 mx-auto"
                         >
-                            <div className={`absolute inset-0 bg-gradient-to-br ${isHuman ? 'from-purple-500/20 to-indigo-500/20' : 'from-green-500/20 to-emerald-500/20'} rounded-full blur-2xl animate-pulse`} />
-                            <div className="relative w-full h-full bg-white/5 rounded-full border border-white/10 flex items-center justify-center text-6xl shadow-inner">
+                            <div className={`absolute inset-0 bg-gradient-to-br ${isHuman ? 'from-purple-500/20 to-indigo-500/20' : 'from-green-500/20 to-emerald-500/20'} rounded-full blur-3xl animate-pulse`} />
+                            <div className="relative w-full h-full bg-white/5 rounded-full border border-white/10 flex items-center justify-center text-8xl shadow-inner">
                                 {getEntityEmoji(result.entityName)}
                             </div>
                         </motion.div>
@@ -314,11 +314,10 @@ function ResultContent() {
                     className="flex w-full gap-4 pt-4"
                 >
                     <Link
-                        href="/scan"
+                        href="/"
                         className="flex-1 py-4 bg-gray-800 hover:bg-gray-700 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all active:scale-95"
                     >
-                        <RotateCcw className="w-5 h-5" />
-                        다시 하기
+                        처음으로
                     </Link>
                     <button
                         onClick={() => {
@@ -328,11 +327,12 @@ function ResultContent() {
                                     text: `나의 전생은 ${result.nickname} ${result.entityName}였습니다! 당신의 전생도 확인해보세요.`,
                                     url: window.location.href,
                                 }).catch(() => {
-                                    alert('공유하기에 실패했습니다. 링크를 복사해주세요.');
+                                    navigator.clipboard.writeText(window.location.href);
+                                    alert('링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                                 });
                             } else {
                                 navigator.clipboard.writeText(window.location.href);
-                                alert('링크가 클립보드에 복사되었습니다!');
+                                alert('링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                             }
                         }}
                         className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all active:scale-95"
