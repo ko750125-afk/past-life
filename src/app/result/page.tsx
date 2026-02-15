@@ -255,6 +255,17 @@ function ResultContent() {
                                 ))}
                             </div>
                         </div>
+
+                        {/* Reincarnation Reason Section */}
+                        <div className="text-left bg-gradient-to-r from-purple-900/40 to-indigo-900/40 p-5 rounded-2xl border border-purple-500/20 mt-4">
+                            <h3 className="text-purple-300 font-black mb-3 flex items-center gap-2 text-xs uppercase tracking-widest">
+                                <Crown className="w-3 h-3" />
+                                인간으로 환생한 이유
+                            </h3>
+                            <p className="text-white/90 text-[15px] leading-relaxed word-keep-all font-bold italic">
+                                "{result.reincarnationReason}"
+                            </p>
+                        </div>
                     </div>
                 </motion.div>
 
@@ -328,11 +339,11 @@ function ResultContent() {
                                     url: window.location.href,
                                 }).catch(() => {
                                     navigator.clipboard.writeText(window.location.href);
-                                    alert('링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
+                                    alert('나의 전생 찾기 결과 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                                 });
                             } else {
                                 navigator.clipboard.writeText(window.location.href);
-                                alert('링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
+                                alert('나의 전생 찾기 결과 링크가 복사되었습니다. 카카오톡 등 원하는 곳에 붙여넣어 공유하세요!');
                             }
                         }}
                         className="flex-1 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl font-bold text-white flex items-center justify-center gap-2 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all active:scale-95"
@@ -349,8 +360,13 @@ function ResultContent() {
 export default function ResultPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4">
+                <motion.div
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="w-16 h-16 rounded-full border-t-2 border-purple-500"
+                />
+                <p className="text-purple-200 font-bold animate-pulse">전생의 기억을 불러오는 중...</p>
             </div>
         }>
             <ResultContent />

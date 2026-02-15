@@ -58,9 +58,12 @@ export default function ResultCard({ result }: ResultCardProps) {
         ctx.fill();
         ctx.restore();
 
-        // 4. Draw Entity Emoji - MUCCCH LARGER as requested
-        ctx.font = "240px serif";
+        // 4. Draw Entity Emoji - PERFECT CENTERING & VISIBILITY
+        ctx.save();
+        ctx.textAlign = "center";
         ctx.textBaseline = "middle";
+        ctx.font = "240px serif";
+
         const getEmoji = (name: string) => {
             const map: Record<string, string> = {
                 "호랑이": "🐯", "곰": "🐻", "독수리": "🦅", "거북이": "🐢", "여우": "🦊",
@@ -77,11 +80,15 @@ export default function ResultCard({ result }: ResultCardProps) {
             return "✨";
         };
 
-        // Add shadow for visibility
-        ctx.shadowColor = "rgba(0,0,0,0.3)";
-        ctx.shadowBlur = 20;
-        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 120 + 30);
-        ctx.shadowBlur = 0; // Reset shadow
+        // Multiple shadows for "Pop-out" effect against paper
+        ctx.shadowColor = "rgba(0,0,0,0.5)";
+        ctx.shadowBlur = 30;
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+
+        // Centered in the circle (HEIGHT / 2 - 120)
+        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 120);
+        ctx.restore();
 
         // 6. Draw Text Overlay
         ctx.textAlign = "center";

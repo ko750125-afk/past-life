@@ -71,6 +71,12 @@ const STORY_ADVICE = [
     "인생 뭐 있나요? 전생엔 {entityName}였는데! 내일 걱정은 내일의 나에게 맡기고, 오늘은 그냥 전생의 당신처럼 뻔뻔하게 살아가 보세요. 당신은 충분히 비범하니까요!"
 ];
 
+const STORY_REASON = [
+    "당신이 이번 생에 인간으로 환생할 수 있었던 이유는, 전생에 {entityName}(으)로 살면서도 {statDescription}(을)를 발휘해 위기에 빠진 숲속 친구들을 구했기 때문입니다. 그 공덕이 하늘에 닿아 특별히 인간의 몸을 허락받았네요.",
+    "사실 {entityName} 시절, 당신은 {statDescription} 덕분에 만인의 우상이었고, 생을 마감할 때 '다음 생엔 맛있는 걸 더 많이 먹고 싶다'는 간절한 소원을 빌었습니다. 그 소원이 접수되어 미식의 즐거움을 아는 인간으로 태어났습니다.",
+    "전생의 {entityName}였던 당신은 그 누구보다 {statDescription}에 진심이었고, 자기보다 약한 존재를 위해 자신의 먹이를 양보하는 자비심을 보였습니다. 덕분에 이번 생엔 더 큰 베풂을 실천할 수 있는 인간의 기회를 얻었군요."
+];
+
 export interface Stats {
     appearance: number;    // 외모
     personality: number;   // 성격
@@ -94,6 +100,7 @@ export interface SessionResult extends PastLifeResult {
     nickname: string;
     compatibilityAnimal: string; // Changed from items
     story: string;
+    reincarnationReason: string;
 }
 
 export const determinePastLife = (seed: number): PastLifeResult => {
@@ -161,10 +168,39 @@ const generateStory = (base: PastLifeResult, stats: Stats, seed: number): string
     const paragraphs = [
         STORY_INTRO[introIndex],
         STORY_LIFE[lifeIndex],
-        STORY_ADVICE[adviceIndex]
+        STORY_ADVICE[adviceIndex],
+        STORY_REASON[introIndex % STORY_REASON.length] // Combine reason
     ];
 
     return paragraphs.map(p => replaceVars(p)).join("\n\n");
+};
+
+const generateReason = (base: PastLifeResult, stats: Stats, seed: number): string => {
+    const reasonIndex = Math.abs(seed * 17) % STORY_REASON.length;
+    // Find highest stat for description
+    let maxStat = "appearance";
+    let maxVal = stats.appearance;
+    Object.entries(stats).forEach(([key, val]) => {
+        if (val > maxVal) {
+            maxVal = val;
+            maxStat = key;
+        }
+    });
+    const statMap: Record<string, string> = {
+        appearance: "아름다운 외모",
+        personality: "인자한 성격",
+        money: "막강한 재력",
+        stamina: "강인한 체력",
+        lifespan: "장수하는 복",
+        descendants: "자손 번창"
+    };
+    const statDescription = statMap[maxStat];
+
+    return STORY_REASON[reasonIndex]
+        .replace(/{era}/g, base.era.name)
+        .replace(/{birthYear}/g, base.birthYear.toString())
+        .replace(/{entityName}/g, base.entityName)
+        .replace(/{statDescription}/g, statDescription);
 };
 
 export const generateSessionVariations = (seed: number, sessionId: string): SessionResult => {
@@ -196,12 +232,14 @@ export const generateSessionVariations = (seed: number, sessionId: string): Sess
     const compatibilityAnimal = COMPATIBILITY_ANIMALS[animalIndex];
 
     const story = generateStory(baseResult, stats, variationHash);
+    const reincarnationReason = generateReason(baseResult, stats, variationHash);
 
     return {
         ...baseResult,
         stats,
         nickname,
         compatibilityAnimal,
-        story
+        story,
+        reincarnationReason
     };
 };

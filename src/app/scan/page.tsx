@@ -263,14 +263,14 @@ export default function ScanPage() {
                     {capturedImage ? (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-                            className="flex flex-col w-full items-center -mt-64 pb-20"
+                            className="fixed bottom-32 left-6 right-6 z-50 flex flex-col items-center"
                         >
                             <button
                                 onClick={analyze}
-                                className="w-full py-24 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[5rem] font-black text-7xl shadow-[0_40px_120px_rgba(168,85,247,0.7)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-10 group border-b-[16px] border-purple-800"
+                                className="w-full py-28 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[6rem] font-black text-8xl shadow-[0_50px_150px_rgba(168,85,247,0.8)] hover:scale-[1.05] active:scale-90 transition-all flex items-center justify-center gap-12 group border-b-[20px] border-purple-800"
                             >
-                                <Zap className="w-20 h-20 fill-white group-hover:animate-bounce" />
-                                분석 시작
+                                <Zap className="w-24 h-24 fill-white group-hover:animate-bounce" />
+                                <span className="drop-shadow-lg">분석 시작</span>
                             </button>
                         </motion.div>
                     ) : (
