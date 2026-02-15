@@ -99,46 +99,83 @@ export default function ScanPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#030303] flex flex-col items-center justify-center text-white p-6 overflow-hidden">
-                {/* Vortex / Blackhole Animation */}
-                <div className="relative w-64 h-64 mb-12 flex items-center justify-center">
-                    {[...Array(6)].map((_, i) => (
+            <div className="min-h-screen bg-[#000] flex flex-col items-center justify-center text-white p-6 overflow-hidden relative">
+                {/* Cinematic Background Glow */}
+                <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-black to-indigo-900/20" />
+
+                {/* Warp Tunnel Animation */}
+                <div className="relative w-80 h-80 mb-12 flex items-center justify-center">
+                    {[...Array(12)].map((_, i) => (
                         <motion.div
                             key={i}
+                            initial={{ scale: 0.1, opacity: 0 }}
                             animate={{
-                                rotate: i % 2 === 0 ? 360 : -360,
-                                scale: [1, 1.1, 1],
-                                opacity: [0.3, 0.6, 0.3]
+                                rotate: i % 2 === 0 ? 720 : -720,
+                                scale: [0.1, 1.5, 3],
+                                opacity: [0, 0.5, 0],
                             }}
                             transition={{
-                                duration: 3 + i,
+                                duration: 2,
                                 repeat: Infinity,
-                                ease: "linear"
+                                delay: i * 0.15,
+                                ease: "easeOut"
                             }}
-                            className="absolute border border-purple-500/30 rounded-full"
+                            className="absolute border rounded-full"
                             style={{
-                                width: `${(i + 1) * 40}px`,
-                                height: `${(i + 1) * 40}px`,
-                                borderWidth: i === 0 ? '4px' : '1px',
-                                borderColor: i === 0 ? '#a855f7' : 'rgba(168, 85, 247, 0.2)'
+                                width: '100%',
+                                height: '100%',
+                                borderWidth: '2px',
+                                borderColor: i % 3 === 0 ? '#a855f7' : i % 3 === 1 ? '#3b82f6' : '#ec4899',
+                                boxShadow: `0 0 20px ${i % 3 === 0 ? '#a855f7' : i % 3 === 1 ? '#3b82f6' : '#ec4899'}`,
                             }}
                         />
                     ))}
+
+                    {/* Central Singularity */}
                     <motion.div
-                        animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="w-8 h-8 bg-white rounded-full blur-md shadow-[0_0_50px_white]"
+                        animate={{
+                            scale: [1, 2, 0.8, 1.5, 1],
+                            opacity: [0.5, 1, 0.5, 1, 0.5],
+                            boxShadow: [
+                                "0 0 40px #fff",
+                                "0 0 100px #a855f7",
+                                "0 0 60px #fff",
+                                "0 0 120px #3b82f6",
+                                "0 0 40px #fff"
+                            ]
+                        }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                        className="w-4 h-4 bg-white rounded-full z-10"
                     />
                 </div>
 
-                <h2 className="text-3xl font-black tracking-tight mb-4 animate-pulse">과거로 타임슬립 중</h2>
-                <div className="flex gap-2">
-                    {[0, 1, 2].map((i) => (
+                <div className="relative">
+                    <motion.h2
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 0.5, repeat: Infinity }}
+                        className="text-4xl font-black tracking-tight mb-4 relative z-10"
+                    >
+                        과거로 타임슬립 중
+                    </motion.h2>
+                    <motion.h2
+                        animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0, 0.5] }}
+                        transition={{ duration: 0.5, repeat: Infinity }}
+                        className="text-4xl font-black tracking-tight mb-4 absolute top-0 left-0 text-purple-500 blur-sm -z-10"
+                    >
+                        과거로 타임슬립 중
+                    </motion.h2>
+                </div>
+
+                <div className="flex gap-4">
+                    {[0, 1, 2, 3, 4].map((i) => (
                         <motion.div
                             key={i}
-                            animate={{ y: [0, -10, 0] }}
-                            transition={{ delay: i * 0.2, repeat: Infinity }}
-                            className="w-2 h-2 bg-purple-500 rounded-full"
+                            animate={{
+                                scale: [1, 2, 1],
+                                backgroundColor: ["#a855f7", "#3b82f6", "#ec4899", "#a855f7"]
+                            }}
+                            transition={{ delay: i * 0.1, duration: 1, repeat: Infinity }}
+                            className="w-3 h-3 rounded-full"
                         />
                     ))}
                 </div>
