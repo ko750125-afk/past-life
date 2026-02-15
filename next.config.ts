@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
+const isGithubPages = process.env.GH_PAGES === 'true';
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: isGithubPages ? "export" : undefined,
+  basePath: isGithubPages ? "/past-life" : undefined,
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
