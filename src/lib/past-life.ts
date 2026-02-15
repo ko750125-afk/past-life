@@ -199,29 +199,48 @@ const generateStory = (base: PastLifeResult, stats: Stats, seed: number): string
     return selectedParagraphs.map(p => replaceVars(p)).join("\n\n");
 };
 
-const STORY_REASON = [
-    "당신이 이번 생에 인간으로 환생할 수 있었던 이유는, 전생에 {entityName}(으)로 살면서도 {statDescription}(을)를 발휘해 위기에 빠진 숲속 친구들을 구했기 때문입니다.",
-    "생을 마감할 때 '다음 생엔 맛있는 걸 더 많이 먹고 싶다'는 간절한 소원을 빌었고, 당신의 뛰어난 {statDescription} 덕분에 그 소원이 접수되어 인간으로 태어났습니다.",
-    "전생의 {entityName}였던 당신은 그 누구보다 {statDescription}에 진심이었고, 베풂을 실천했기에 이번 생에 인간의 몸을 허락받았습니다."
-];
+const FUNNY_REASONS: Record<string, string[]> = {
+    appearance: [
+        "전생에 거울을 볼 때마다 깊은 한숨을 쉬었던 당신. 옥황상제가 '그래, 이번엔 필터와 보정 어플이 있는 세상에서 살아봐라'라며 특별히 인간으로 보내주셨습니다.",
+        "짝을 찾지 못해 외로워하던 당신의 영혼이 '다음 생엔 인간으로 태어나서 성형이라도 하겠다'고 떼를 쓰는 바람에, 저승사자가 귀찮아서 환생 도장을 찍어줬습니다."
+    ],
+    popularity: [
+        "전생에 친구가 없어 혼잣말만 50년을 하다가, '다음 생엔 인싸가 되고 싶다'는 소원을 빌었습니다. 아직 그 소원이 이루어지는 중이니 조금만 기다려보세요.",
+        "아무도 당신을 기억해주지 않는 게 너무 억울해서, 이번 생엔 '구독과 좋아요'를 받을 때까지 집에 가지 않겠다고 염라대왕 바짓가랑이를 잡고 늘어졌군요."
+    ],
+    stamina: [
+        "사냥하러 뛰어가다 숨이 차서 굶어 죽은 게 천추의 한이 되었습니다. '숨만 쉬어도 배달 음식이 오는 천국'을 찾아 헤매다 인간계로 오게 되었습니다.",
+        "전생에 세 발자국만 걸어도 기절하던 저질 체력이라, 이번 생엔 '누워서 스마트폰 하기'라는 신기술을 마음껏 누려보라고 인간 육체를 받았습니다."
+    ],
+    personality: [
+        "성격이 너무 더러워 저승에서도 받아주질 않아 강제 반송당했습니다. 인간계에서 '사회성'이란 걸 좀 배워오라는 염라대왕의 특별 숙제입니다.",
+        "전생에 툭하면 주변 동물들과 싸워서, 이번 생엔 '악플' 말고 '선플' 다는 법을 배우라고 인간으로 다시 태어났습니다. 착하게 사세요."
+    ],
+    lifespan: [
+        "맛집 리스트를 다 정복하지 못하고 요절한 게 너무 억울해, '치킨에 맥주'를 먹어볼 때까지는 절대 못 죽는다며 환생을 강력하게 요구했습니다.",
+        "너무 빨리 죽어서 저승 명부에도 이름이 누락되었습니다. 행정 착오로 인해 얼떨결에 인간으로 다시 태어나는 행운(또는 불행)을 얻으셨군요."
+    ],
+    descendants: [
+        "자손을 못 남겨 제사상을 못 얻어먹는 바람에 배가 고팠던 당신. '직접 편의점 가서 사 먹겠다'는 강한 의지로 인간으로 환생했습니다.",
+        "평생 솔로로 살다 간 게 불쌍해, 이번 생엔 데이팅 앱이라도 한번 써보라고 신이 마지막 기회를 주셨습니다. 부디 성공하시길."
+    ]
+};
 
 const generateReason = (base: PastLifeResult, stats: Stats, seed: number): string => {
-    const reasonIndex = Math.abs(seed * 17) % STORY_REASON.length;
+    // We base the reason on the LOWEST stat - compensating for what was lacking
     const sortedStats = Object.entries(stats).sort((a, b) => b[1] - a[1]);
-    const topStatKey = sortedStats[0][0];
+    const lowestStatKey = sortedStats[sortedStats.length - 1][0];
 
-    const statMap: Record<string, string> = {
-        appearance: "아름다운 외모",
-        personality: "인자한 성격",
-        popularity: "하늘을 찌르는 인기",
-        stamina: "강인한 체력",
-        lifespan: "장수하는 복",
-        descendants: "자손 번창"
-    };
+    const reasons = FUNNY_REASONS[lowestStatKey] || [
+        "전생에 너무 착하게 살아서 천국에 갈 뻔했으나, '인간 세상의 매운맛을 좀 더 보고 싶다'는 이상한 취향 때문에 다시 내려왔습니다.",
+        "사실 별 이유 없습니다. 저승 환생 트랙터의 뺑뺑이 추첨에서 1등 당첨되셨습니다. 축하드려요."
+    ];
 
-    return STORY_REASON[reasonIndex]
+    const reasonIndex = Math.abs(seed * 13) % reasons.length;
+
+    return reasons[reasonIndex]
         .replace(/{entityName}/g, base.entityName)
-        .replace(/{statDescription}/g, statMap[topStatKey] || "남다른 능력");
+        .replace(/{birthYear}/g, base.birthYear.toString());
 };
 
 export const generateSessionVariations = (seed: number, sessionId: string): SessionResult => {
