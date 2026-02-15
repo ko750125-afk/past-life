@@ -8,6 +8,22 @@ interface ResultCardProps {
     result: SessionResult;
 }
 
+const getEmoji = (name: string) => {
+    const map: Record<string, string> = {
+        "호랑이": "🐯", "곰": "🐻", "독수리": "🦅", "거북이": "🐢", "여우": "🦊",
+        "늑대": "🐺", "사슴": "🦌", "올빼미": "🦉", "고양이": "🐱", "강아지": "🐶",
+        "토끼": "🐰", "다람쥐": "🐿️", "판다": "🐼", "해태": "🦁", "용": "🐲",
+        "왕족": "👑", "장군": "⚔️", "철학자": "📜", "예술가": "🎨", "상인": "💰",
+        "농부": "👩‍🌾", "의사": "🩺", "학자": "📚", "대장장이": "⚒️", "탐험가": "🧭",
+        "시인": "🖋️", "건축가": "🏛️", "요리사": "👨‍🍳", "무녀": "🔮", "어부": "🎣",
+        "도공": "🏺", "궁수": "🏹", "악사": "🎵", "승려": "🙏", "역관": "🗣️",
+        "화원": "🖌️", "재상": "💂", "천문학자": "🔭", "서예가": "🖌️", "사냥꾼": "🏹",
+        "목수": "🔨", "약제사": "🌿", "주막 주인": "🍶", "뱃사공": "🛶", "광대": "🤡"
+    };
+    for (const [k, v] of Object.entries(map)) if (name.includes(k)) return v;
+    return "✨";
+};
+
 export default function ResultCard({ result }: ResultCardProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -26,7 +42,6 @@ export default function ResultCard({ result }: ResultCardProps) {
         canvas.height = HEIGHT;
 
         // 2. Draw Background (Era based color/gradient)
-        // In a real app, I'd load an image here. For now, procedurally generate "Old Paper" look + Era tint.
         const gradient = ctx.createLinearGradient(0, 0, 0, HEIGHT);
 
         // Era specific hues
@@ -50,56 +65,26 @@ export default function ResultCard({ result }: ResultCardProps) {
             ctx.fill();
         }
 
-        // 3. Draw Silhouette Aura (Enhanced visibility)
+        // 3. Draw Clean White Circle for Contrast (No aura/막 effect)
         ctx.save();
         const centerX = WIDTH / 2;
         const centerY = HEIGHT / 2 - 120;
 
-        // Outer Glow
-        const aura = ctx.createRadialGradient(centerX, centerY, 50, centerX, centerY, 220);
-        aura.addColorStop(0, "rgba(255, 255, 255, 0.8)");
-        aura.addColorStop(0.5, `hsla(${hue}, 100%, 90%, 0.5)`);
-        aura.addColorStop(1, "rgba(255, 255, 255, 0)");
-
-        ctx.fillStyle = aura;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.9)"; // Solid clean white
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 220, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Inner solid-ish circle for contrast
-        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 160, 0, Math.PI * 2);
+        ctx.arc(centerX, centerY, 200, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
-        // 4. Draw Entity Emoji - PERFECT CENTERING & VISIBILITY
+        // 4. Draw Entity Emoji - SHARP & CLEAR
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.font = "240px serif";
 
-        const getEmoji = (name: string) => {
-            const map: Record<string, string> = {
-                "호랑이": "🐯", "곰": "🐻", "독수리": "🦅", "거북이": "🐢", "여우": "🦊",
-                "늑대": "🐺", "사슴": "🦌", "올빼미": "🦉", "고양이": "🐱", "강아지": "🐶",
-                "토끼": "🐰", "다람쥐": "🐿️", "판다": "🐼", "해태": "🦁", "용": "🐲",
-                "왕족": "👑", "장군": "⚔️", "철학자": "📜", "예술가": "🎨", "상인": "💰",
-                "농부": "👩‍🌾", "의사": "🩺", "학자": "📚", "대장장이": "⚒️", "탐험가": "🧭",
-                "시인": "🖋️", "건축가": "🏛️", "요리사": "👨‍🍳", "무녀": "🔮", "어부": "🎣",
-                "도공": "🏺", "궁수": "🏹", "악사": "🎵", "승려": "🙏", "역관": "🗣️",
-                "화원": "🖌️", "재상": "💂", "천문학자": "🔭", "서예가": "🖌️", "사냥꾼": "🏹",
-                "목수": "🔨", "약제사": "🌿", "주막 주인": "🍶", "뱃사공": "🛶", "광대": "🤡"
-            };
-            for (const [k, v] of Object.entries(map)) if (name.includes(k)) return v;
-            return "✨";
-        };
-
-        // Multiple shadows for "Pop-out" effect against paper
-        ctx.shadowColor = "rgba(0,0,0,0.5)";
-        ctx.shadowBlur = 30;
-        ctx.shadowOffsetX = 5;
-        ctx.shadowOffsetY = 5;
+        // Use a very subtle sharp shadow for depth, no blur
+        ctx.shadowColor = "rgba(0,0,0,0.1)";
+        ctx.shadowBlur = 5;
 
         // Centered in the circle (HEIGHT / 2 - 120)
         ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 120);
@@ -140,13 +125,14 @@ export default function ResultCard({ result }: ResultCardProps) {
         ctx.font = "18px serif";
         ctx.fillText(`영혼의 단짝: ${result.compatibilityAnimal} ${getEmoji(result.compatibilityAnimal)}`, WIDTH / 2, 730);
 
-        // Stamp/Seal (simulation)
+        // Stamp/Seal
         ctx.save();
         ctx.translate(WIDTH - 100, HEIGHT - 100);
         ctx.rotate(-0.2);
         ctx.fillStyle = "rgba(180, 0, 0, 0.7)";
         ctx.beginPath();
-        ctx.roundRect(-40, -40, 80, 80, 10);
+        // Use basic rect for universal compatibility in SSR/Build
+        ctx.rect(-40, -40, 80, 80);
         ctx.fill();
         ctx.fillStyle = "white";
         ctx.font = "bold 20px serif";
@@ -160,9 +146,6 @@ export default function ResultCard({ result }: ResultCardProps) {
 
     return (
         <div className="flex flex-col items-center gap-4 mt-8">
-            {/* Download Label Removed */}
-
-            {/* Hidden canvas for generation, or visible if we want to show preview */}
             <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/10 p-2 bg-white/5">
                 <canvas ref={canvasRef} className="max-w-full h-auto w-[280px] rounded-2xl" />
             </div>

@@ -63,13 +63,6 @@ export default function ScanPage() {
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const dataUrl = canvas.toDataURL("image/png");
                 setCapturedImage(dataUrl);
-
-                // Auto-analyze after 3 seconds if user doesn't tap
-                setTimeout(() => {
-                    if (videoRef.current && canvasRef.current && !loading) {
-                        // We will allow the user to see the button first
-                    }
-                }, 3000);
             }
         }
     };
@@ -196,7 +189,7 @@ export default function ScanPage() {
             {/* Scanning Area / Main Capture Zone */}
             <div
                 className="flex-1 relative flex flex-col items-center justify-center bg-black overflow-hidden border-y border-white/10 cursor-pointer"
-                onClick={!capturedImage ? captureImage : undefined}
+                onClick={!capturedImage ? captureImage : (loading ? undefined : analyze)}
             >
                 <AnimatePresence mode="wait">
                     {error && !capturedImage ? (
@@ -241,9 +234,9 @@ export default function ScanPage() {
                                         <motion.div
                                             animate={{ opacity: [0.4, 1, 0.4] }}
                                             transition={{ duration: 2, repeat: Infinity }}
-                                            className="text-white text-2xl font-black uppercase tracking-[0.2em] drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                                            className="text-white text-3xl font-black uppercase tracking-[0.2em] drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] text-center px-6"
                                         >
-                                            화면을 터치하여 촬영
+                                            {!capturedImage ? "화면을 터치하여 촬영" : "화면을 터치하여 분석 시작"}
                                         </motion.div>
                                     </div>
 
@@ -267,13 +260,13 @@ export default function ScanPage() {
                 <motion.div
                     initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="fixed bottom-24 left-6 right-6 z-50 flex flex-col items-center"
+                    className="fixed bottom-0 left-0 right-0 z-50 p-6 bg-gradient-to-t from-black to-transparent"
                 >
                     <button
                         onClick={analyze}
-                        className="w-full py-28 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[6rem] font-black text-8xl shadow-[0_50px_150px_rgba(168,85,247,0.8)] hover:scale-[1.05] active:scale-90 transition-all flex items-center justify-center gap-12 group border-b-[20px] border-purple-800"
+                        className="w-full py-20 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-[4rem] font-black text-6xl shadow-[0_0_100px_rgba(168,85,247,0.8)] active:scale-95 transition-all flex items-center justify-center gap-8 group border-b-[12px] border-purple-800"
                     >
-                        <Zap className="w-24 h-24 fill-white group-hover:animate-bounce" />
+                        <Zap className="w-16 h-16 fill-white animate-bounce" />
                         <span className="drop-shadow-lg">분석 시작</span>
                     </button>
                 </motion.div>
