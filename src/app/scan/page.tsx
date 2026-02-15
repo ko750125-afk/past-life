@@ -233,48 +233,45 @@ export default function ScanPage() {
                                 </div>
                             )}
 
-                            {/* Face Guide Oval - Centered - Always Visible Overlay */}
-                            <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-                                {!capturedImage && (
-                                    <div className="w-[260px] h-[360px] border-4 border-dashed border-white/20 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.7)] relative mb-24">
-                                        {/* No text here */}
+                            {/* Face Guide Oval & Capture Hint - Centered Vertical Stack */}
+                            {!capturedImage && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
+                                    <div className="w-[260px] h-[360px] border-4 border-dashed border-white/20 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.7)] relative mb-8">
+                                        {/* Guide Lines */}
                                     </div>
-                                )}
 
-                                {/* Tap/Touch Hint - Overlay on top of everything */}
-                                <motion.div
-                                    animate={{ opacity: [0.9, 1, 0.9] }}
-                                    className="absolute bottom-16 left-0 right-0 z-50 pointer-events-none flex justify-center items-center px-6"
-                                >
-                                    {!capturedImage ? (
+                                    <motion.div
+                                        animate={{ opacity: [0.5, 1, 0.5] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                        className="text-white text-2xl font-black uppercase tracking-[0.2em] text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                                    >
+                                        <span className="bg-black/40 px-6 py-2 rounded-full backdrop-blur-md border border-white/10">화면을 터치하여 촬영</span>
+                                    </motion.div>
+                                </div>
+                            )}
+
+                            {/* Analyze Hint - Fixed Bottom Overlay */}
+                            {capturedImage && (
+                                <div className="absolute inset-x-0 bottom-12 z-50 flex justify-center pointer-events-none">
+                                    <motion.div
+                                        initial={{ y: 50, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        className="flex flex-row items-center gap-5 bg-black/80 backdrop-blur-xl px-8 py-5 rounded-full border border-yellow-500/50 shadow-[0_8px_32px_rgba(0,0,0,0.8)]"
+                                    >
                                         <motion.div
-                                            animate={{ opacity: [0.6, 1, 0.6] }}
-                                            transition={{ duration: 2, repeat: Infinity }}
-                                            className="text-white text-2xl font-black uppercase tracking-[0.2em] text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                                            animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
+                                            transition={{ duration: 1.5, repeat: Infinity }}
+                                            className="bg-yellow-400/20 p-2 rounded-full"
                                         >
-                                            <span className="bg-black/40 px-4 py-1 rounded-full backdrop-blur-sm">화면을 터치하여 촬영</span>
+                                            <Smartphone className="w-8 h-8 text-yellow-400 fill-yellow-400" />
                                         </motion.div>
-                                    ) : (
-                                        <motion.div
-                                            initial={{ y: 20, opacity: 0 }}
-                                            animate={{ y: 0, opacity: 1 }}
-                                            className="flex flex-row items-center gap-5 bg-black/70 backdrop-blur-md px-8 py-4 rounded-full border border-yellow-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
-                                        >
-                                            <motion.div
-                                                animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
-                                                transition={{ duration: 1.5, repeat: Infinity }}
-                                                className="bg-yellow-400/20 p-2 rounded-full"
-                                            >
-                                                <Smartphone className="w-8 h-8 text-yellow-400 fill-yellow-400" />
-                                            </motion.div>
-                                            <div className="text-yellow-400 font-bold text-xl leading-tight text-left">
-                                                화면을 터치하면<br />
-                                                <span className="text-white font-black text-2xl">분석이 시작됩니다</span>
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </motion.div>
-                            </div>
+                                        <div className="text-yellow-400 font-bold text-xl leading-tight text-left">
+                                            화면을 터치하면<br />
+                                            <span className="text-white font-black text-2xl">분석이 시작됩니다</span>
+                                        </div>
+                                    </motion.div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </AnimatePresence>
