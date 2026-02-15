@@ -65,7 +65,18 @@ export default function ResultCard({ result }: ResultCardProps) {
             ctx.fill();
         }
 
-        // 3. Draw Entity Emoji - SHARP, LARGE & IMPACTFUL
+        // 3. Draw Watercolor/Ink Splash Background (Natural highlight)
+        ctx.save();
+        const splashGradient = ctx.createRadialGradient(WIDTH / 2, HEIGHT / 2 - 100, 50, WIDTH / 2, HEIGHT / 2 - 100, 250);
+        splashGradient.addColorStop(0, `hsla(${hue}, 100%, 95%, 0.8)`); // Bright center
+        splashGradient.addColorStop(0.4, `hsla(${hue}, 100%, 90%, 0.4)`); // Soft middle
+        splashGradient.addColorStop(1, `hsla(${hue}, 100%, 90%, 0)`); // Fade out
+
+        ctx.fillStyle = splashGradient;
+        ctx.beginPath();
+        ctx.arc(WIDTH / 2, HEIGHT / 2 - 100, 250, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
         ctx.save();
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";

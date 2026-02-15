@@ -239,8 +239,17 @@ export default function ScanPage() {
                                             {!capturedImage ? (
                                                 <>화면을 터치하여<br />전생 사진 촬영</>
                                             ) : (
-                                                <div className="text-yellow-400">
-                                                    화면을 터치하여<br />전생 분석 시작!
+                                                <div className="flex flex-col items-center gap-4">
+                                                    <motion.div
+                                                        animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] }}
+                                                        transition={{ duration: 1.5, repeat: Infinity }}
+                                                        className="bg-white/20 p-4 rounded-full backdrop-blur-md border border-white/30"
+                                                    >
+                                                        <Smartphone className="w-12 h-12 text-yellow-400" />
+                                                    </motion.div>
+                                                    <div className="text-yellow-400 font-black text-4xl drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] bg-black/50 px-6 py-3 rounded-2xl backdrop-blur-sm border border-yellow-500/30">
+                                                        화면을 터치하면<br />분석이 시작됩니다
+                                                    </div>
                                                 </div>
                                             )}
                                         </motion.div>
