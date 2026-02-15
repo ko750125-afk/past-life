@@ -112,7 +112,7 @@ export default function ScanPage() {
                     </div>
                 </div>
                 <h2 className="text-2xl font-black tracking-tight mb-2">시간의 균열 탐색 중</h2>
-                <p className="text-white/40 text-sm font-mono animate-pulse">EXTRACTING TEMPORAL DATA...</p>
+                <p className="text-white/40 text-sm font-mono animate-pulse uppercase">Extracting Temporal Data...</p>
             </div>
         )
     }
@@ -121,12 +121,11 @@ export default function ScanPage() {
         <main className="min-h-screen bg-[#030303] text-white relative flex flex-col font-sans overflow-hidden">
             {/* Header / HUD */}
             <div className="absolute top-0 left-0 right-0 p-6 z-30 flex justify-between items-center pointer-events-none">
-                <Link href="/" className="pointer-events-auto bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-all">
-                    <ArrowLeft className="w-5 h-5 text-white/70" />
+                <Link href="/" className="pointer-events-auto bg-white/10 p-3 rounded-full border border-white/20 hover:bg-white/20 transition-all">
+                    <ArrowLeft className="w-5 h-5 text-white" />
                 </Link>
                 <div className="flex flex-col items-center">
-                    <h1 className="text-lg font-black tracking-widest text-purple-200">TEMPORAL SCAN</h1>
-                    <div className="text-[9px] font-mono text-white/30 tracking-[0.3em]">SECURE_LINK // ID_EXTRACTOR</div>
+                    <h1 className="text-xl font-black tracking-widest text-white">TEMPORAL SCAN</h1>
                 </div>
                 <div className="w-11"></div>
             </div>
@@ -143,7 +142,7 @@ export default function ScanPage() {
                             <p className="text-red-400 font-bold mb-6 word-keep-all">{error}</p>
                             <button
                                 onClick={() => startCamera()}
-                                className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-bold hover:bg-white/10 transition-colors"
+                                className="w-full py-4 bg-white/10 border border-white/20 rounded-2xl text-white font-bold hover:bg-white/20 transition-colors"
                             >
                                 시스템 리부팅
                             </button>
@@ -166,25 +165,31 @@ export default function ScanPage() {
                                         className="w-full h-full object-cover transform scale-x-[-1]"
                                     />
 
-                                    {/* Scanning VFX */}
-                                    <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 via-transparent to-purple-500/10" />
+                                    {/* Face Guide Oval */}
+                                    <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                                        <div className="w-[240px] h-[320px] border-2 border-dashed border-white/50 rounded-[120px/160px] shadow-[0_0_0_9999px_rgba(3,3,3,0.6)]">
+                                            {/* Corner accents inside the oval zone */}
+                                            <div className="absolute inset-0 animate-pulse">
+                                                <div className="absolute top-10 left-1/2 -translate-x-1/2 text-[10px] font-bold text-white/70 uppercase tracking-widest">Align Face</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Scanning Line VFX */}
                                     <motion.div
                                         animate={{ top: ['0%', '100%', '0%'] }}
                                         transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                                        className="absolute left-0 w-full h-[2px] bg-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.5)] z-20"
+                                        className="absolute left-0 w-full h-[2px] bg-purple-500/60 shadow-[0_0_15px_rgba(168,85,247,0.8)] z-30"
                                     />
-
-                                    {/* Grid Overlay */}
-                                    <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
                                 </div>
                             )}
 
-                            {/* HUD Corners */}
-                            <div className="absolute inset-8 border border-white/10 pointer-events-none">
-                                <div className="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-purple-500" />
-                                <div className="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-purple-500" />
-                                <div className="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-purple-500" />
-                                <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-purple-500" />
+                            {/* HUD Static Corners */}
+                            <div className="absolute inset-8 border border-white/10 pointer-events-none z-10">
+                                <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-purple-500" />
+                                <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-purple-500" />
+                                <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-2 border-l-2 border-purple-500" />
+                                <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-purple-500" />
                             </div>
                         </div>
                     )}
@@ -194,34 +199,34 @@ export default function ScanPage() {
             </div>
 
             {/* Controls */}
-            <div className="bg-[#030303] p-8 pb-16 relative">
-                <div className="max-w-md mx-auto flex items-center justify-between gap-6">
+            <div className="bg-[#030303] p-10 pb-16 relative">
+                <div className="max-w-md mx-auto">
                     {capturedImage ? (
                         <motion.div
-                            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                            className="flex w-full items-center gap-4"
+                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                            className="flex w-full items-center gap-6"
                         >
                             <button
                                 onClick={retake}
-                                className="flex flex-col items-center gap-2 text-white/40 hover:text-white transition-colors group"
+                                className="flex flex-col items-center gap-3 text-white/50 hover:text-white transition-colors group"
                             >
-                                <div className="p-4 bg-white/5 rounded-2xl border border-white/10 group-hover:border-white/20">
-                                    <RefreshCw className="w-6 h-6" />
+                                <div className="p-5 bg-white/5 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all">
+                                    <RefreshCw className="w-7 h-7" />
                                 </div>
-                                <span className="text-[10px] font-black uppercase tracking-widest">RESET</span>
+                                <span className="text-[11px] font-black uppercase tracking-widest">Retake</span>
                             </button>
 
                             <button
                                 onClick={analyze}
-                                className="flex-1 py-5 bg-white text-black rounded-2xl font-black text-xl shadow-[0_20px_40px_rgba(255,255,255,0.1)] active:scale-95 transition-all"
+                                className="flex-1 py-6 bg-white text-black rounded-3xl font-black text-2xl shadow-xl hover:bg-purple-50 active:scale-95 transition-all"
                             >
                                 분석 개시
                             </button>
                         </motion.div>
                     ) : (
-                        <div className="flex w-full items-center justify-between gap-4">
-                            {/* Combined Upload Label */}
-                            <div className="flex flex-col items-center gap-2 group cursor-pointer relative">
+                        <div className="grid grid-cols-3 items-end w-full">
+                            {/* Photo Upload */}
+                            <div className="flex flex-col items-center gap-3 group relative cursor-pointer">
                                 <input
                                     type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer z-10" id="file-upload"
                                     onChange={(e) => {
@@ -249,26 +254,26 @@ export default function ScanPage() {
                                         }
                                     }}
                                 />
-                                <div className="p-4 bg-white/5 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all">
-                                    <Smartphone className="w-7 h-7 text-white/70 group-hover:text-white transition-colors" />
+                                <div className="p-5 bg-white/5 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all">
+                                    <Smartphone className="w-8 h-8 text-white/50 group-hover:text-white transition-colors" />
                                 </div>
-                                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">사진 업로드</span>
+                                <span className="text-[11px] font-black text-white/40 uppercase tracking-widest">사진 업로드</span>
                             </div>
 
-                            {/* Shutter Button */}
-                            <div className="flex flex-col items-center gap-3">
+                            {/* Center Capture Button */}
+                            <div className="flex flex-col items-center gap-4">
                                 <button
                                     onClick={captureImage}
                                     disabled={!!error && !navigator.mediaDevices?.getUserMedia}
-                                    className="w-20 h-20 rounded-full border-4 border-white/20 p-1 bg-white/5 active:scale-90 transition-all disabled:opacity-20 flex items-center justify-center group"
+                                    className="w-24 h-24 rounded-full border-4 border-white/30 p-1.5 bg-white/5 active:scale-90 transition-all disabled:opacity-20 flex items-center justify-center group"
                                 >
-                                    <div className="w-full h-full rounded-full bg-white group-hover:scale-95 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)]"></div>
+                                    <div className="w-full h-full rounded-full bg-white group-hover:scale-95 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.4)]"></div>
                                 </button>
-                                <span className="text-[11px] font-black text-white uppercase tracking-widest">카메라</span>
+                                <span className="text-[12px] font-black text-white uppercase tracking-widest">카메라</span>
                             </div>
 
-                            {/* Balanced Spacer */}
-                            <div className="w-16"></div>
+                            {/* Balanced Spacer for Grid alignment */}
+                            <div className="w-full h-full"></div>
                         </div>
                     )}
                 </div>
