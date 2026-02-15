@@ -60,6 +60,7 @@ export default function ResultCard({ result }: ResultCardProps) {
 
         // 4. Draw Entity Emoji - MUCCCH LARGER as requested
         ctx.font = "240px serif";
+        ctx.textBaseline = "middle";
         const getEmoji = (name: string) => {
             const map: Record<string, string> = {
                 "호랑이": "🐯", "곰": "🐻", "독수리": "🦅", "거북이": "🐢", "여우": "🦊",
@@ -75,7 +76,12 @@ export default function ResultCard({ result }: ResultCardProps) {
             for (const [k, v] of Object.entries(map)) if (name.includes(k)) return v;
             return "✨";
         };
-        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 120 + 80);
+
+        // Add shadow for visibility
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = 20;
+        ctx.fillText(getEmoji(result.entityName), WIDTH / 2, HEIGHT / 2 - 120 + 30);
+        ctx.shadowBlur = 0; // Reset shadow
 
         // 6. Draw Text Overlay
         ctx.textAlign = "center";
@@ -132,10 +138,7 @@ export default function ResultCard({ result }: ResultCardProps) {
 
     return (
         <div className="flex flex-col items-center gap-4 mt-8">
-            <h3 className="text-white/40 font-black flex items-center gap-2 text-[10px] uppercase tracking-[0.2em]">
-                <Download className="w-3 h-3" />
-                Download ID Card
-            </h3>
+            {/* Download Label Removed */}
 
             {/* Hidden canvas for generation, or visible if we want to show preview */}
             <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/10 p-2 bg-white/5">

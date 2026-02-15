@@ -323,7 +323,7 @@ function ResultContent() {
                         onClick={() => {
                             if (navigator.share) {
                                 navigator.share({
-                                    title: '나의 전생 리포트',
+                                    title: '나의 전생 찾기',
                                     text: `나의 전생은 ${result.nickname} ${result.entityName}였습니다! 당신의 전생도 확인해보세요.`,
                                     url: window.location.href,
                                 }).catch(() => {
