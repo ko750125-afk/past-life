@@ -1,7 +1,7 @@
 "use client";
 
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Share2, RotateCcw, Sparkles, PawPrint, User, Zap, Crown, Eye, Heart, Anchor, Star, Clock, AlertCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { generateSessionVariations, SessionResult } from "@/lib/past-life";
@@ -124,7 +124,7 @@ const Timeline = ({ birth, death, era }: { birth: number, death: number, era: st
     );
 };
 
-export default function ResultPage() {
+function ResultContent() {
     const searchParams = useSearchParams();
     const [result, setResult] = useState<SessionResult | null>(null);
 
@@ -291,5 +291,17 @@ export default function ResultPage() {
                 </motion.div>
             </motion.div>
         </main>
+    );
+}
+
+export default function ResultPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            </div>
+        }>
+            <ResultContent />
+        </Suspense>
     );
 }
