@@ -235,12 +235,10 @@ export default function ScanPage() {
 
                             {/* Face Guide Oval & Unified Bottom Prompt - Centered Vertical Stack */}
                             <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-                                {/* Only show oval when not captured */}
-                                {!capturedImage && (
-                                    <div className="w-[260px] h-[360px] border-4 border-dashed border-white/20 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.7)] relative mb-8">
-                                        {/* Guide Lines */}
-                                    </div>
-                                )}
+                                {/* Face Guide Oval - Always Visible Overlay */}
+                                <div className="w-[260px] h-[360px] border-4 border-dashed border-white/20 rounded-[130px/180px] shadow-[0_0_0_9999px_rgba(0,0,0,0.7)] relative mb-8 min-h-[360px]">
+                                    {/* Guide Lines */}
+                                </div>
 
                                 {/* Unified Prompt Area - Always below the oval's position */}
                                 <AnimatePresence mode="wait">
